@@ -1,9 +1,9 @@
 # ORA-IU
 
-# Overview
+## Overview
 This project aims to simulate the online retail application.
 
-# Dependencies
+## Dependencies
 * [axios](https://github.com/axios/axios)
 * [express](https://expressjs.com/en/4x/api.html)
 
