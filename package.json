@@ -1,0 +1,15 @@
+{
+  "name": "fake-bank-data-generator",
+  "version": "1.0.0",
+  "description": "a fake bank data generator use for pdm project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "john",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+  }
+}
