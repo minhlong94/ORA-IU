@@ -106,4 +106,100 @@ app.put('/american-express/user/:bank_number', (req, res) => {
 	res.send(found_user);
 });
 
+app.put('/discover-card/user/:bank_number', (req, res) => {
+	let found_user = discover_card.find(element => element.card_number === req.params.bank_number);
+	if(!found_user){
+		res.status(404).send('User not found');
+		return;
+	}
+
+	if(req.body.balance < 0){
+		res.status(400).send('Bad request');
+		return;
+	}
+
+	if(found_user.balance === 0){
+		res.status(403).send('User account has been frozen');
+		return;
+	}
+
+	found_user.balance = req.body.balance;
+	if(req.query.test === "false") {
+		fs.writeFileSync('./data/Discover Card.json', JSON.stringify(american_express, null, 2), 'binary');
+	}
+	res.send(found_user);
+});
+
+app.put('/master-card/user/:bank_number', (req, res) => {
+	let found_user = master_card.find(element => element.card_number === req.params.bank_number);
+	if(!found_user){
+		res.status(404).send('User not found');
+		return;
+	}
+
+	if(req.body.balance < 0){
+		res.status(400).send('Bad request');
+		return;
+	}
+
+	if(found_user.balance === 0){
+		res.status(403).send('User account has been frozen');
+		return;
+	}
+
+	found_user.balance = req.body.balance;
+	if(req.query.test === "false") {
+		fs.writeFileSync('./data/MasterCard.json', JSON.stringify(american_express, null, 2), 'binary');
+	}
+	res.send(found_user);
+});
+
+app.put('/visa-retired/user/:bank_number', (req, res) => {
+	let found_user = visa_retired.find(element => element.card_number === req.params.bank_number);
+	if(!found_user){
+		res.status(404).send('User not found');
+		return;
+	}
+
+	if(req.body.balance < 0){
+		res.status(400).send('Bad request');
+		return;
+	}
+
+	if(found_user.balance === 0){
+		res.status(403).send('User account has been frozen');
+		return;
+	}
+
+	found_user.balance = req.body.balance;
+	if(req.query.test === "false") {
+		fs.writeFileSync('./data/Visa Retired.json', JSON.stringify(american_express, null, 2), 'binary');
+	}
+	res.send(found_user);
+});
+
+app.put('/visa/user/:bank_number', (req, res) => {
+	let found_user = visa.find(element => element.card_number === req.params.bank_number);
+	if(!found_user){
+		res.status(404).send('User not found');
+		return;
+	}
+
+	if(req.body.balance < 0){
+		res.status(400).send('Bad request');
+		return;
+	}
+
+	if(found_user.balance === 0){
+		res.status(403).send('User account has been frozen');
+		return;
+	}
+
+	found_user.balance = req.body.balance;
+	if(req.query.test === "false") {
+		fs.writeFileSync('./data/Visa.json', JSON.stringify(american_express, null, 2), 'binary');
+	}
+	res.send(found_user);
+});
+
 module.exports = app;
