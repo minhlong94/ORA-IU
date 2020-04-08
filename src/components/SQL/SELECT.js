@@ -10,8 +10,8 @@ var con = mysql.createConnection({
 
 // Export database into table.json file
 con.connect();
-con.query('select * from pdm.newonlineretail order by ItemDes', function(err, results, fields) {
-    if(err) throw err;
+con.query('SELECT * FROM pdm.newonlineretail ORDER BY ItemDes', function (err, results, fields) {
+    if (err) throw err;
 
     fs.writeFile('table.json', JSON.stringify(results), function (err) {
         if (err) throw err;
