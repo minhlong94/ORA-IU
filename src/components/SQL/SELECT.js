@@ -12,7 +12,6 @@ var con = mysql.createConnection({
 con.connect();
 con.query('SELECT * FROM pdm.newonlineretail ORDER BY ItemDes', function (err, results, fields) {
     if (err) throw err;
-
     fs.writeFile('table.json', JSON.stringify(results), function (err) {
         if (err) throw err;
         console.log('Saved!');

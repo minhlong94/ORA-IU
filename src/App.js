@@ -1,9 +1,11 @@
 import React from "react";
 import "./styles.css";
-import ShoppingTable from "./components/ShoppingTable/ShoppingTable.js";
-
+import "mdbreact/dist/css/mdb.css"
+import DatatablePage from './components/ShoppingTable/ShoppingTableSearchBar';
 export default function App() {
   return (
-      <ShoppingTable />
+      <div>
+        <DatatablePage />
+      </div>
   );
 }

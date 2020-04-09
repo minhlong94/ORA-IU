@@ -40,3 +40,13 @@ table.blueTable thead th {
 table.blueTable thead th:first-child {
   border-left: none;
 }
+button.addToCart {
+  background-color: #af3a3a; /* Green */
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}

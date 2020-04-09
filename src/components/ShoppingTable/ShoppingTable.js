@@ -1,8 +1,14 @@
 import React from 'react';
 import table from "../SQL/table";
 import {useTable, usePagination} from 'react-table';
+import cart from "../Static/126083.png";
+
+/* Deprecated */
 
 /*Forked from https://github.com/tannerlinsley/react-table/tree/master/examples/pagination */
+const cartImage = () => {
+    return <img src={cart} />
+}
 
 function Table({columns, data}) {
     // Use the state and functions returned from useTable to build your UI
@@ -11,10 +17,7 @@ function Table({columns, data}) {
         getTableBodyProps,
         headerGroups,
         prepareRow,
-        page, // Instead of using 'rows', we'll use page,
-        // which has only the rows for the active page
-
-        // The rest of these things are super handy, too ;)
+        page,
         canPreviousPage,
         canNextPage,
         pageOptions,
@@ -47,22 +50,21 @@ function Table({columns, data}) {
                 ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                {page.map((row, i) => {
+                {page.map((row) => {
                     prepareRow(row)
                     return (
                         <tr {...row.getRowProps()}>
-                            {row.cells.map(cell => {
-                                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                            })}
+                            {row.cells.map((cell,i) => {
+                                return i < 4 ?
+                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                    : <button className="addToCart">AddToCart{cartImage()}</button>
+                            })
+                            }
                         </tr>
                     )
                 })}
                 </tbody>
             </table>
-            {/*
-        Pagination can be built however you'd like.
-        This is just a very basic UI implementation:
-      */}
             <div className="pagination">
                 <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                     {'<<'}
@@ -146,8 +148,7 @@ export default function ShoppingTable() {
         ],
         []
     )
-    const data = table;
     return (
-        <Table columns={columns} data={data}/>
+        <Table columns={columns} data={table}/>
     )
 }
