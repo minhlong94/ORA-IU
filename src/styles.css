@@ -3,24 +3,24 @@
   text-align: center;
 }
 
-table.blueTable {
+.blueTable {
   border: 2px solid #1C6EA4;
   background-color: #EEEEEE;
   width: 100%;
   text-align: left;
   border-collapse: collapse;
 }
-table.blueTable td, table.blueTable th {
+.blueTable td, table.blueTable th {
   border: 1px solid #AAAAAA;
   padding: 3px 2px;
 }
-table.blueTable tbody td {
+.blueTable tbody td {
   font-size: 13px;
 }
-table.blueTable tr:nth-child(even) {
+.blueTable tr:nth-child(even) {
   background: #D0E4F5;
 }
-table.blueTable thead {
+.blueTable thead {
   background: #1C6EA4;
   background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
   background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
@@ -28,7 +28,7 @@ table.blueTable thead {
   border-bottom: 2px solid #444444;
 }
 
-table.blueTable thead th {
+.blueTable thead th {
   border: 1px solid #AAAAAA;
   font-size: 15px;
   font-weight: bold;
@@ -37,7 +37,7 @@ table.blueTable thead th {
   border-left: 2px solid #D0E4F5;
   background: #1C6EA4;
 }
-table.blueTable thead th:first-child {
+.blueTable thead th:first-child {
   border-left: none;
 }
 button.addToCart {

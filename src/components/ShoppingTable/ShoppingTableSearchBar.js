@@ -1,23 +1,28 @@
 import React from 'react';
-import {MDBBtn, MDBDataTable} from 'mdbreact';
+import {MDBDataTable} from 'mdbreact';
 import table from "../SQL/table";
 
-/*TODO: insert button to the AddToCart column*/
-
+/*
+   * mdbreact table
+   * @param label {string}: name of the column
+   * @param field {string}: name of the associated field in JSON file, contains cell data
+   * @param sort {string}: sort order, 'asc' or 'desc'
+   * @param width {int}: width of the column
+ */
 const DatatablePage = () => {
     const data = {
         columns: [
             {
-                label: 'Stock Code',
-                field: 'StockCode',
-                sort: 'asc',
-                width: 150
+                label: 'Stock Code', // Column's name
+                field: 'StockCode', // json attribute
+                sort: 'asc', // ascending sort
+                width: 150 // width of the column
             },
             {
                 label: 'Item Description',
                 field: 'ItemDes',
                 sort: 'asc',
-                width: 270
+                width: 200
             },
             {
                 label: 'Unit Price',
@@ -31,29 +36,23 @@ const DatatablePage = () => {
                 sort: 'asc',
                 width: 100
             }
-            // ,
-            // {
-            //     label: 'Add to Cart',
-            //     field: <MDBBtn color="purple" size="sm">Button</MDBBtn>,
-            //     sort: 'asc',
-            //     width: 150,
-            // }
         ],
         rows: table
     };
 
+    // https://mdbootstrap.com/docs/react/tables/datatables/#docsTabsAPI
     return (
         <MDBDataTable
-            striped
             bordered
             small
-            hover
-            theadColor="blue lighten-1"
             data={data}
             btn
-            className="blueTable"
+            noBottomColumns={true}
+            className='blueTable'
         />
     );
 }
-
+/*
+    Comment className row to disable sync with CSS
+ */
 export default DatatablePage;
