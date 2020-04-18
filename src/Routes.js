@@ -1,10 +1,11 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-import Home from "./containers/Homepage/Home";
-import NotFound from "./containers/NotFound";
-import Signup from "./containers/Registration/Signup";
-import Login from "./containers/Login/Login";
+import Home from "./components/Homepage/Home";
+import NotFound from "./components/NotFound 404/NotFound";
+import Signup from "./components/Registration/Signup";
+import Login from "./components/Login/Login";
+import DatatablePage from "./components/ShoppingTable/ShoppingTableSearchBar";
 
 export default function Routes() {
     return (
@@ -19,6 +20,10 @@ export default function Routes() {
 
             <Route exact path="/signup">
                 <Signup />
+            </Route>
+
+            <Route exact path="/items">
+                <DatatablePage />
             </Route>
 
             <Route>
