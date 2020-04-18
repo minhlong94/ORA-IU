@@ -51,7 +51,7 @@ const DatatablePage = () => {
             className='blueTable'
         />
     );
-}
+};
 /*
     Comment className row to disable sync with CSS
  */
