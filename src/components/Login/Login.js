@@ -1,6 +1,5 @@
 import React from "react";
 import {Button, Form} from "react-bootstrap";
-import bcrypt from 'bcryptjs';
 
 import "./Login.css";
 import {useFormFields} from "../Utils/FormFields";
