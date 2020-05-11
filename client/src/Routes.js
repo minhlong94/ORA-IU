@@ -1,34 +1,33 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
+import React, {useContext} from "react";
+import { BrowserRouter ,Route, Switch, Redirect } from "react-router-dom";
 
-import Home from "./components/Homepage/Home";
-import NotFound from "./components/NotFound 404/NotFound";
 import Signup from "./components/Registration/Signup";
 import Login from "./components/Login/Login";
 import DatatablePage from "./components/ShoppingTable/ShoppingTableSearchBar";
+import {UserContext} from "./context";
 
 export default function Routes() {
+    const {validated} = useContext(UserContext);
     return (
-        <Switch>
-            <Route exact path="/">
-                <Home />
-            </Route>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/items">
+                    <DatatablePage />
+                </Route>
 
-            <Route exact path="/login">
-                <Login />
-            </Route>
+                <Route exact path="/login">
+                    <Login />
+                </Route>
 
-            <Route exact path="/signup">
-                <Signup />
-            </Route>
+                <Route exact path="/signup">
+                    <Signup />
+                </Route>
 
-            <Route exact path="/items">
-                <DatatablePage />
-            </Route>
+                <Route exact path={"/"}>
+                    {validated || localStorage.getItem("valid") ? <Redirect to={"/items"}/>: <Redirect to={"/login"}/>}
+                </Route>
+            </Switch>
+        </BrowserRouter>
 
-            <Route>
-                <NotFound />
-            </Route>
-        </Switch>
     );
 }

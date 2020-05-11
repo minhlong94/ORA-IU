@@ -1,6 +1,6 @@
 import React from 'react';
 import {MDBDataTable} from 'mdbreact';
-import table from "../SQL/table";
+import table from "./table.json";
 
 /*
    * mdbreact table
@@ -39,17 +39,20 @@ const DatatablePage = () => {
         ],
         rows: table
     };
-
     // https://mdbootstrap.com/docs/react/tables/datatables/#docsTabsAPI
     return (
-        <MDBDataTable
-            bordered
-            small
-            data={data}
-            btn
-            noBottomColumns={true}
-            className='blueTable'
-        />
+        <React.Fragment>
+            <h1>Items</h1>
+            <MDBDataTable
+                bordered
+                small
+                data={data}
+                btn
+                noBottomColumns={true}
+                className='blueTable'
+            />
+        </React.Fragment>
+
     );
 };
 /*

@@ -1,16 +1,27 @@
-import React from "react";
+import React, {useState} from "react";
 import Routes from "./Routes";
 
 import "./App.css";
 import NavigationBar from "./components/Utils/NavigationBar";
+import {UserContext} from "./context";
 
 function App() {
+    const [validated, setValidated] = useState(false);
+    const [user, setUser] = useState({
+        user_id: '',
+        username: '',
+        first_name: '',
+        last_name: ''
+    })
     return (
-        <div className="App container">
-            <NavigationBar/>
-            <Routes />
+        <div className="App">
+            <UserContext.Provider value={{validated, setValidated, user, setUser}}>
+                <NavigationBar/>
+                <Routes/>
+            </UserContext.Provider>
         </div>
     );
 }
+
 
 export default App;

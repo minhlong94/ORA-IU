@@ -7,60 +7,70 @@ import {Link, Redirect} from "react-router-dom";
 
 const axios = require('axios');
 
+const initial_state = {
+    first_name: '',
+    last_name: '',
+    password: '',
+    confirmPassword: '',
+    username: '',
+    errors: {
+        password: 'This field is required.',
+        confirmPassword: 'This field is required.',
+        username: 'This field is required.'
+    }
+}
 
 export default function Signup() {
 
-    let [fields, setFields] = useState({
-        first_name: '',
-        last_name: '',
-        password: '',
-        confirmPassword: '',
-        username: '',
-        errors: {
-            password: 'This field is required.',
-            confirmPassword: 'This field is required.',
-            username: 'This field is required.'
-        }
-    });
+    const [fields, setFields] = useState(initial_state);
 
-    let [validated, setValidated] = useState(false);
+    const [validated, setValidated] = useState(false);
 
     const handleFieldChange = event => setFields({...fields, [event.target.id]: event.target.value});
 
     const handleSubmit = async event => {
         event.preventDefault();
         const res = await axios.get(`http://localhost:5000/users?username=${fields.username}`);
-        validated = true;
-        if (res.data.length > 0) {
-            fields.username = '';
-            fields.password = '';
-            fields.confirmPassword = '';
-            fields.errors.username = 'User has already been taken';
 
-            validated = false;
+        /**
+         * This shouldn't be
+         *     let newField = fields
+         * since, by doing this, newField will have a reference to the fields, which will
+         * affect the hook when the setState() function is called (in this case, it is setField())
+         */
+        let newField = {...fields};
+        let newValidated = true;
+
+        if (res.data.length > 0) {
+            newField.username = '';
+            newField.password = '';
+            newField.confirmPassword = '';
+            newField.errors.username = 'User has already been taken';
+
+            newValidated = false;
         }
         if (fields.password.length < 8) {
-            fields.password = '';
-            fields.confirmPassword = '';
-            fields.errors.password = 'Password must be at least 8 characters.'
-            validated = false;
+            newField.password = '';
+            newField.confirmPassword = '';
+            newField.errors.password = 'Password must be at least 8 characters.'
+            newValidated = false;
         } else if (fields.confirmPassword !== fields.password) {
-            fields.password = '';
-            fields.confirmPassword = '';
-            fields.errors.confirmPassword = 'Password does not match!';
-            validated = false;
+            newField.password = '';
+            newField.confirmPassword = '';
+            newField.errors.confirmPassword = 'Password does not match!';
+            newValidated = false;
         }
 
-        setValidated(validated);
-        setFields(fields);
+        setValidated(newValidated);
+        setFields(newField);
 
-        if (validated) {
+        if (newValidated) {
             await axios.post("http://localhost:5000/users", {
                 username: fields.username,
                 password: fields.password,
                 first_name: fields.first_name,
                 last_name: fields.last_name
-            })
+            });
         }
     };
 

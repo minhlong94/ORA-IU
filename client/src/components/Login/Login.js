@@ -1,46 +1,92 @@
-import React from "react";
+import React, {useContext, useState} from "react";
 import {Button, Form} from "react-bootstrap";
+import {Redirect} from "react-router-dom";
 
 import "./Login.css";
-import {useFormFields} from "../Utils/FormFields";
+import {UserContext} from "../../context";
+
+const axios = require('axios');
+
+let initial_state = {
+    username: '',
+    password: '',
+    errors: {
+        username: 'This field is required',
+        password: 'This field is required'
+    }
+}
 
 export default function Login() {
-    const [user, setUser] = useFormFields({
-        email: '',
-        password: ''
-    });
+    const [state, setState] = useState(initial_state);
+    const {validated, setValidated, user, setUser} = useContext(UserContext);
 
-    const validate = () => {
-        return user.email.length > 0 && user.password.length > 0;
-    };
-
-    const handleSubmit = event => {
+    const handleSubmit = async event => {
         event.preventDefault();
+        let newState = {...state};
+        let newUser = {...user};
 
+        const response = await axios.post("http://localhost:5000/users/login", {
+            username: state.username,
+            password: state.password
+        });
+
+        newState.errors = response.data.errors;
+
+        if (!response.data.valid) {
+            newState.username = '';
+            newState.password = '';
+        }
+        else {
+            newUser.user_id = response.data.user_id;
+            newUser.username = response.data.username;
+            newUser.first_name = response.data.first_name;
+            newUser.last_name = response.data.last_name;
+        }
+        setState(newState);
+        localStorage.setItem("valid", response.data.valid.toString());
+        localStorage.setItem("user", JSON.stringify(newUser))
+        setValidated(response.data.valid);
+        setUser(newUser);
     };
+
+    const handleChange = event => {
+        setState({
+            ...state,
+            [event.target.id]: event.target.value
+        })
+    }
+
+
+    if (validated) {
+        return (
+            <Redirect to={'/items'}/>
+        )
+    }
+
 
     return (
         <div className='Login'>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group controlId='email'>
-                    <Form.Label>Email:</Form.Label>
-                    <Form.Control type='email'
-                                  placeholder='Your email'
-                                  value={user.email}
-                                  onChange={setUser}
-                                  autoFocus/>
+            <Form noValidate validated={validated.toString()} onSubmit={handleSubmit}>
+                <Form.Group controlId='username'>
+                    <Form.Label>Username:</Form.Label>
+                    <Form.Control type='text' value={state.username}
+                                  onChange={handleChange} required/>
+                    <Form.Control.Feedback type={'invalid'}>
+                        {state.errors.username}
+                    </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId='password'>
                     <Form.Label>Password:</Form.Label>
-                    <Form.Control type='password'
-                                  placeholder='Your password'
-                                  value={user.password}
-                                  onChange={setUser}/>
+                    <Form.Control type='password' value={state.password} minLength={8}
+                                  onChange={handleChange} required/>
+                    <Form.Control.Feedback type={'invalid'}>
+                        {state.errors.password}
+                    </Form.Control.Feedback>
                 </Form.Group>
 
-                <Button type='submit'
-                        disabled={!validate()}
+                <Button variant={'primary'} type='submit'
+                        validated={validated.toString()}
                         block>
                     Login
                 </Button>
