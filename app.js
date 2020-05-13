@@ -3,8 +3,11 @@ const express = require('express');
 const cors = require('cors');
 const config = require('./config.json');
 const bcrypt = require('bcrypt');
+const server_config = require("./server_config.json");
 
 const app = express();
+
+const PORT = server_config.port;
 
 app.use(express.json());
 app.use(cors());
@@ -94,4 +97,59 @@ app.post("/users/login", (req, res) => {
     })
 })
 
-app.listen(5000, () => console.log('Listening on port 5000...'));
+app.get("/items", (req, res) => {
+    const connection = mysql.createConnection(config);
+    connection.connect(err => {
+        if (err) throw err;
+        const statement = "SELECT I.item_id, I.item_name, I.price, I.amount, S.supplier_name, C.class_name " +
+            "FROM Item I, Supplier S, Class C WHERE S.supplier_id = I.supplier_id AND C.class_id = I.class_id";
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(results);
+        })
+    })
+});
+
+app.get("/bank/bank_name", (req, res) => {
+    const connection = mysql.createConnection(config);
+    connection.connect(err => {
+        if (err) throw err;
+        const statement = "SELECT * FROM BankName";
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(results);
+        })
+    })
+})
+
+app.get("/bank", (req, res) => {
+    const connection = mysql.createConnection(config);
+    const user_id = req.query.user_id;
+    connection.connect(err => {
+        if (err) throw err;
+        const statement = `SELECT BA.customer_id, BA.bank_number, BA.user_id, BN.name 
+                        FROM BankAccount BA, BankName BN 
+                        WHERE BA.bank_id = BN.bank_id AND BA.user_id = ${user_id}`;
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(results);
+        })
+    })
+})
+
+app.post("/bank", (req, res) => {
+    const customer_id = Date.now();
+    const {bank_number, user_id, bank_id} = req.body;
+    const connection = mysql.createConnection(config);
+    connection.connect(err => {
+        if (err) throw err;
+        const statement = `INSERT INTO BankAccount(customer_id, bank_number, user_id, bank_id) 
+                            VALUES('${customer_id}', '${bank_number}', '${user_id}', '${bank_id}')`
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json({customer_id, user_id, bank_id, bank_number});
+        })
+    })
+})
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

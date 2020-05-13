@@ -4,8 +4,10 @@ import {Button, Form} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import './Signup.css';
 import {Link, Redirect} from "react-router-dom";
+import {IS_LOGGED_IN} from "../../LocalStorageKey";
 
-const axios = require('axios');
+import axios from "axios";
+import {USER} from "../../api_config";
 
 const initial_state = {
     first_name: '',
@@ -30,14 +32,8 @@ export default function Signup() {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        const res = await axios.get(`http://localhost:5000/users?username=${fields.username}`);
+        const res = await axios.get(`${USER}?username=${fields.username}`);
 
-        /**
-         * This shouldn't be
-         *     let newField = fields
-         * since, by doing this, newField will have a reference to the fields, which will
-         * affect the hook when the setState() function is called (in this case, it is setField())
-         */
         let newField = {...fields};
         let newValidated = true;
 
@@ -80,6 +76,9 @@ export default function Signup() {
                 <Redirect to={'/login'}/>
             )
         }
+
+        if (localStorage.getItem(IS_LOGGED_IN))
+            return <Redirect to={'/items'}/>
         return (
             <div className='Signup'>
                 <Form noValidate validated={validated.toString()} onSubmit={handleSubmit}>

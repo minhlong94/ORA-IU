@@ -1,18 +1,19 @@
-import React, {useContext} from "react";
+import React from "react";
 import { BrowserRouter ,Route, Switch, Redirect } from "react-router-dom";
+import {IS_LOGGED_IN} from "./LocalStorageKey";
 
 import Signup from "./components/Registration/Signup";
 import Login from "./components/Login/Login";
-import DatatablePage from "./components/ShoppingTable/ShoppingTableSearchBar";
-import {UserContext} from "./context";
+import Items from "./components/Item/Items";
+import Cart from "./components/Cart/Cart";
+import Account from "./components/Account/Account";
 
 export default function Routes() {
-    const {validated} = useContext(UserContext);
     return (
         <BrowserRouter>
             <Switch>
                 <Route exact path="/items">
-                    <DatatablePage />
+                    <Items/>
                 </Route>
 
                 <Route exact path="/login">
@@ -24,7 +25,15 @@ export default function Routes() {
                 </Route>
 
                 <Route exact path={"/"}>
-                    {validated || localStorage.getItem("valid") ? <Redirect to={"/items"}/>: <Redirect to={"/login"}/>}
+                    {localStorage.getItem(IS_LOGGED_IN) === "true" ? <Redirect to={"/items"}/>: <Redirect to={"/login"}/>}
+                </Route>
+
+                <Route exact path={"/cart"}>
+                    <Cart/>
+                </Route>
+
+                <Route exact path={"/account"}>
+                    <Account/>
                 </Route>
             </Switch>
         </BrowserRouter>

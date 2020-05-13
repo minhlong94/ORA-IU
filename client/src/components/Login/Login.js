@@ -4,8 +4,10 @@ import {Redirect} from "react-router-dom";
 
 import "./Login.css";
 import {UserContext} from "../../context";
+import {CURRENT_USER, IS_LOGGED_IN} from "../../LocalStorageKey";
 
-const axios = require('axios');
+import axios from "axios";
+import {USER} from "../../api_config";
 
 let initial_state = {
     username: '',
@@ -25,7 +27,7 @@ export default function Login() {
         let newState = {...state};
         let newUser = {...user};
 
-        const response = await axios.post("http://localhost:5000/users/login", {
+        const response = await axios.post(`${USER}/login`, {
             username: state.username,
             password: state.password
         });
@@ -41,12 +43,12 @@ export default function Login() {
             newUser.username = response.data.username;
             newUser.first_name = response.data.first_name;
             newUser.last_name = response.data.last_name;
+            localStorage.setItem(CURRENT_USER, JSON.stringify(newUser));
+            localStorage.setItem(IS_LOGGED_IN, response.data.valid.toString());
+            setValidated(response.data.valid);
+            setUser(newUser);
         }
         setState(newState);
-        localStorage.setItem("valid", response.data.valid.toString());
-        localStorage.setItem("user", JSON.stringify(newUser))
-        setValidated(response.data.valid);
-        setUser(newUser);
     };
 
     const handleChange = event => {
@@ -57,7 +59,7 @@ export default function Login() {
     }
 
 
-    if (validated) {
+    if (localStorage.getItem(IS_LOGGED_IN)) {
         return (
             <Redirect to={'/items'}/>
         )

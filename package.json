@@ -1,11 +1,11 @@
 {
-  "name": "pdm",
+  "name": "pdm_v3",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "client": "cd client && npm start",
-    "server": "nodemon app.js",
+    "server": "node app.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],

@@ -1,13 +1,10 @@
 import {Nav, Navbar} from "react-bootstrap";
 import React, {useContext} from "react";
 import {UserContext} from "../../context";
+import {CURRENT_USER} from "../../LocalStorageKey";
 
 export default function NavigationBar() {
-    const {validated, user} = useContext(UserContext);
-    let username = '';
-    if (user.username !== '') {
-        username = user.username;
-    }
+    const {validated} = useContext(UserContext);
     const renderImage = () => (
         <Navbar.Brand href="/">
             <img src="https://react-bootstrap.github.io/logo.svg"
@@ -30,23 +27,26 @@ export default function NavigationBar() {
         </React.Fragment>
     )
 
-    const renderAuthenticated = () => (
-        <React.Fragment>
-            <Nav className="mr-auto">
-                <Nav.Link eventKey={"disabled"} disabled>Hello {username}
-                </Nav.Link>
-                <Nav.Link href="/items">Items</Nav.Link>
-            </Nav>
+    const renderAuthenticated = () => {
+        const user = JSON.parse(localStorage.getItem(CURRENT_USER));
+        const username = user.username;
+        return (
+            <React.Fragment>
+                <Nav className="mr-auto">
+                    <Nav.Link eventKey={"disabled"} disabled>Hello {username}</Nav.Link>
+                    <Nav.Link href="/account">Account</Nav.Link>
+                    <Nav.Link href="/items">Items</Nav.Link>
+                </Nav>
 
-            <Nav>
-                <Nav.Link href="/cart">Cart</Nav.Link>
-                <Nav.Link href={"/login"} onSelect={(selectedKey) => {
-                    localStorage.removeItem("valid");
-                    localStorage.removeItem("user");
-                }}>Log Out</Nav.Link>
-            </Nav>
-        </React.Fragment>
-    )
+                <Nav>
+                    <Nav.Link href="/cart">Cart</Nav.Link>
+                    <Nav.Link href={"/login"} onSelect={(selectedKey) => {
+                        localStorage.clear()
+                    }}>Log Out</Nav.Link>
+                </Nav>
+            </React.Fragment>
+        )
+    }
     return (
         <Navbar bg="dark" variant="dark">
             {renderImage()}

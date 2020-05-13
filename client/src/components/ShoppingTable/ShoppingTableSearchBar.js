@@ -1,6 +1,8 @@
 import React from 'react';
 import {MDBDataTable} from 'mdbreact';
 import table from "./table.json";
+import {Redirect} from "react-router-dom";
+import {IS_LOGGED_IN} from "../../LocalStorageKey";
 
 /*
    * mdbreact table
@@ -40,6 +42,8 @@ const DatatablePage = () => {
         rows: table
     };
     // https://mdbootstrap.com/docs/react/tables/datatables/#docsTabsAPI
+    if (!localStorage.getItem(IS_LOGGED_IN))
+        return <Redirect to={"/login"}/>
     return (
         <React.Fragment>
             <h1>Items</h1>
