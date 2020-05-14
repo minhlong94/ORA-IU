@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, Col, Form} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 
 const AccountItem = ({id, bank_name, bank_number}) => {
     return (

@@ -44,7 +44,6 @@ const Account = () => {
         const user_id = user.user_id;
 
         const response = await axios.post(BANK, {bank_number, bank_id, user_id});
-        newState.bank_name = '';
         newState.first_component = '';
         newState.second_component = '';
         newState.third_component = '';

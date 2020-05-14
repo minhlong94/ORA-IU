@@ -51,11 +51,11 @@ CREATE TABLE Item
   item_name VARCHAR(25) NOT NULL,
   price FLOAT NOT NULL,
   amount INT NOT NULL,
-  supplier_id INT NOT NULL,
   class_id INT NOT NULL,
+  supplier_id INT NOT NULL,
   PRIMARY KEY (item_id),
-  FOREIGN KEY (supplier_id) REFERENCES Supplier(supplier_id),
-  FOREIGN KEY (class_id) REFERENCES Class(class_id)
+  FOREIGN KEY (class_id) REFERENCES Class(class_id),
+  FOREIGN KEY (supplier_id) REFERENCES Supplier(supplier_id)
 );
 
 CREATE TABLE BankAccount
@@ -72,13 +72,14 @@ CREATE TABLE BankAccount
 CREATE TABLE BillDetail
 (
   amount INT NOT NULL,
+  bill_id VARCHAR(15) NOT NULL,
   item_id VARCHAR(15) NOT NULL,
   customer_id VARCHAR(15) NOT NULL,
   user_id VARCHAR(15) NOT NULL,
-  bank_id INT NOT NULL,
-  PRIMARY KEY (item_id, customer_id, user_id, bank_id),
+  PRIMARY KEY (bill_id, item_id, customer_id, user_id),
+  FOREIGN KEY (bill_id) REFERENCES Bill(bill_id),
   FOREIGN KEY (item_id) REFERENCES Item(item_id),
-  FOREIGN KEY (customer_id, user_id, bank_id) REFERENCES BankAccount(customer_id, user_id, bank_id)
+  FOREIGN KEY (customer_id, user_id) REFERENCES BankAccount(customer_id, user_id)
 );
 
 INSERT INTO Class(class_id, class_name) VALUES(1,"Cooking");
