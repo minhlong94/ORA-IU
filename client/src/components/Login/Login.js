@@ -1,13 +1,13 @@
 import React, {useContext, useState} from "react";
 import {Button, Form} from "react-bootstrap";
 import {Redirect} from "react-router-dom";
+import axios from "axios";
 
-import "./Login.css";
 import {UserContext} from "../../context";
 import {CURRENT_USER, IS_LOGGED_IN} from "../../LocalStorageKey";
-
-import axios from "axios";
 import {USER} from "../../api_config";
+
+import "./Login.css";
 
 let initial_state = {
     username: '',

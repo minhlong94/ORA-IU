@@ -1,10 +1,11 @@
 // TODO: Generate a list of cards of item
 import React, {useEffect, useState} from 'react';
 import {CardColumns} from 'react-bootstrap';
-import ProductItem from "./ProductItem";
-import {IS_LOGGED_IN} from "../../LocalStorageKey";
 import {Redirect} from "react-router-dom";
 import axios from "axios";
+
+import ProductItem from "./ProductItem";
+import {IS_LOGGED_IN} from "../../LocalStorageKey";
 import {ITEM} from "../../api_config";
 
 const Items = () => {

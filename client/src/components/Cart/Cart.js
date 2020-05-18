@@ -3,12 +3,14 @@
 import React, {useEffect, useState} from 'react';
 import {Button, CardColumns, Col, Form} from "react-bootstrap";
 import {CART, CURRENT_USER} from "../../LocalStorageKey";
+import axios from "axios";
+
 import CartItem from "./CartItem";
-import "./Cart.css"
+import BillItem from "./BillItem";
 import {CartContext} from "../../context";
 import {BANK, BILL} from "../../api_config";
-import axios from "axios";
-import BillItem from "./BillItem";
+
+import "./Cart.css"
 
 const initialField = {
     bank_name: '',

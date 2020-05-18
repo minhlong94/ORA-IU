@@ -2,6 +2,8 @@ import React from 'react';
 import {Card} from "react-bootstrap";
 
 const AccountItem = ({id, bank_name, bank_number}) => {
+
+
     return (
         <Card style={{ width: '21rem' }} key={id}>
             <Card.Body>

@@ -1,9 +1,11 @@
 import React, {useState} from "react";
-import Routes from "./Routes";
 
-import "./App.css";
+import Routes from "./Routes";
 import NavigationBar from "./components/Utils/NavigationBar";
 import {UserContext} from "./context";
+
+import 'bootstrap/dist/css/bootstrap.css';
+import "./App.css";
 
 function App() {
     const [validated, setValidated] = useState(false);

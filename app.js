@@ -66,31 +66,28 @@ app.post("/users/login", (req, res) => {
     const minPasswordLength = 8;
     connection.connect(err => {
         if (err) throw err;
+        console.log("Connected!");
         const statement = `SELECT * FROM Customer WHERE username='${req.body.username}'`;
         connection.query(statement, async (err, results) => {
             if (err) throw err;
             if (results.length === 0) {
                 state.valid = false;
                 state.errors.username = 'Username does not exist';
-            }
-            else if (req.body.password.length < minPasswordLength) {
+            } else if (req.body.password.length < minPasswordLength) {
                 state.valid = false;
                 state.errors.password = 'Password must contain at least 8 characters';
-            }
-            else {
+            } else {
                 try {
                     if (!await bcrypt.compare(req.body.password, results[0].password)) {
                         state.valid = false;
                         state.errors.password = 'Incorrect password!';
-                    }
-                    else {
+                    } else {
                         state.user_id = results[0].user_id;
                         state.username = results[0].username;
                         state.first_name = results[0].first_name;
                         state.last_name = results[0].last_name;
                     }
-                }
-                catch (e) {
+                } catch (e) {
                     res.status(500).send(e);
                 }
             }
@@ -200,7 +197,7 @@ app.post("/bill", (req, res) => {
         })
         let updateStatement = '';
         let values = [];
-        for (let i=0;i<items.length;i++){
+        for (let i = 0; i < items.length; i++) {
             updateStatement += `UPDATE Item SET amount = amount - ${items[i].buyAmount} WHERE item_id = ${items[i].id};`
             values.push([items[i].buyAmount, bill_id, items[i].id, customer_id, user_id]);
         }
@@ -216,6 +213,19 @@ app.post("/bill", (req, res) => {
             res.json({bill_id, ...req.body})
         })
     })
+})
+
+app.post("/query", (req, res) => {
+    const connection = mysql.createConnection(config);
+    const statement = req.body.statement;
+    connection.connect(err => {
+        if (err) throw err;
+        console.log("Connected!");
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(results);
+        });
+    });
 })
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

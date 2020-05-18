@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Button, CardColumns, Col, Form} from "react-bootstrap";
 import axios from "axios";
-import "./Account.css";
+
 import AccountItem from "./AccountItem";
 import {BANK} from "../../api_config";
 import {CURRENT_USER} from "../../LocalStorageKey";
+
+import "./Account.css";
 
 const initialState = {
     options: [],
@@ -70,22 +72,26 @@ const Account = () => {
                 <Form.Row>
                     <Col>
                         <Form.Group controlId={"first_component"}>
-                            <Form.Control onChange={handleChange}/>
+                            <Form.Control type='no-spinner' onChange={handleChange}
+                                          maxLength={4} minLength={4}/>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group controlId={"second_component"}>
-                            <Form.Control onChange={handleChange}/>
+                            <Form.Control type='no-spinner' onChange={handleChange}
+                                          maxLength={4} minLength={4}/>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group controlId={"third_component"}>
-                            <Form.Control onChange={handleChange}/>
+                            <Form.Control type='no-spinner' onChange={handleChange}
+                                          maxLength={4} minLength={4}/>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group controlId={"forth_component"}>
-                            <Form.Control onChange={handleChange}/>
+                            <Form.Control type='no-spinner' onChange={handleChange}
+                                          maxLength={4} minLength={4}/>
                         </Form.Group>
                     </Col>
                 </Form.Row>
