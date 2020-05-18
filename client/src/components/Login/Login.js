@@ -9,14 +9,14 @@ import {USER} from "../../api_config";
 
 import "./Login.css";
 
-let initial_state = {
+const initial_state = {
     username: '',
     password: '',
     errors: {
         username: 'This field is required',
         password: 'This field is required'
     }
-}
+};
 
 export default function Login() {
     const [state, setState] = useState(initial_state);
@@ -56,7 +56,7 @@ export default function Login() {
             ...state,
             [event.target.id]: event.target.value
         })
-    }
+    };
 
 
     if (localStorage.getItem(IS_LOGGED_IN)) {

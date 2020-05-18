@@ -16,7 +16,7 @@ const initialState = {
     second_component: '',
     third_component: '',
     forth_component: ''
-}
+};
 
 const Account = () => {
     const [state, setState] = useState(initialState);
@@ -28,7 +28,7 @@ const Account = () => {
             const registeredBankAccount = await axios.get(`${BANK}?user_id=${user.user_id}`);
             console.log(registeredBankAccount.data);
             setState({...state, options: optionResponse.data, registered_bank_account: registeredBankAccount.data});
-        }
+        };
         loadData();
     }, []);
 
@@ -54,7 +54,7 @@ const Account = () => {
         newState.registered_bank_account.push(response.data);
 
         setState(newState);
-    }
+    };
 
     return (
         <div className={'bank-account'}>

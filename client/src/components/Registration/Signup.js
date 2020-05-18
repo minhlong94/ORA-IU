@@ -7,6 +7,7 @@ import {IS_LOGGED_IN} from "../../LocalStorageKey";
 import './Signup.css';
 
 import {USER} from "../../api_config";
+
 const axios = require('axios');
 
 const initial_state = {
@@ -20,7 +21,7 @@ const initial_state = {
         confirmPassword: 'This field is required.',
         username: 'This field is required.'
     }
-}
+};
 
 export default function Signup() {
 
@@ -78,7 +79,7 @@ export default function Signup() {
         }
 
         if (localStorage.getItem(IS_LOGGED_IN))
-            return <Redirect to={'/items'}/>
+            return <Redirect to={'/items'}/>;
         return (
             <div className='Signup'>
                 <Form noValidate validated={validated.toString()} onSubmit={handleSubmit}>

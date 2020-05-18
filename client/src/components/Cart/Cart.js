@@ -17,7 +17,7 @@ const initialField = {
     bank_number: '',
     address: '',
     account_options: []
-}
+};
 
 const Cart = () => {
     const [carts, setCarts] = useState(!JSON.parse(localStorage.getItem(CART))
@@ -35,27 +35,27 @@ const Cart = () => {
             const response = await axios.get(`${BANK}?user_id=${user.user_id}`);
             let newAvailable = response.data;
             setAvailable(newAvailable);
-        }
+        };
         loadData();
     }, []);
     useEffect(() => {
         let newField = {...field};
-        newField.account_options = available.filter(val => val.name === field.bank_name)
+        newField.account_options = available.filter(val => val.name === field.bank_name);
         setField(newField)
-    }, [field.bank_name])
+    }, [field.bank_name]);
 
     useEffect(() => {
         const loadData = async () => {
             let user = JSON.parse(localStorage.getItem(CURRENT_USER));
             const response = await axios.get(`${BILL}?user_id=${user.user_id}`);
             let newBill = response.data;
-            for (let i=0; i<newBill.length; ++i) {
+            for (let i = 0; i < newBill.length; ++i) {
                 newBill[i].items = (await axios.get(`${BILL}/${newBill[i].bill_id}`)).data;
             }
             setBills(newBill);
-        }
+        };
         loadData();
-    }, [])
+    }, []);
 
     const handleSubmit = async event => {
         event.preventDefault();
@@ -72,12 +72,12 @@ const Cart = () => {
                 returnObj.buyAmount = val.buyAmount;
                 return returnObj;
             })
-        }
-        await axios.post(`${BILL}`,submitData);
+        };
+        await axios.post(`${BILL}`, submitData);
         console.log(submitData);
         setCarts([]);
         localStorage.setItem(CART, JSON.stringify([]));
-    }
+    };
 
     const handleChange = event => setField({...field, [event.target.id]: event.target.value});
 

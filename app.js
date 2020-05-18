@@ -16,7 +16,7 @@ app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('<h1>Server is running</h1>');
-})
+});
 
 app.get('/users', (req, res) => {
     const connection = mysql.createConnection(config);
@@ -29,7 +29,7 @@ app.get('/users', (req, res) => {
             res.json(results);
         });
     });
-})
+});
 
 app.post('/users', async (req, res) => {
     try {
@@ -62,7 +62,7 @@ app.post("/users/login", (req, res) => {
             username: '',
             password: ''
         }
-    }
+    };
     const minPasswordLength = 8;
     connection.connect(err => {
         if (err) throw err;
@@ -94,7 +94,7 @@ app.post("/users/login", (req, res) => {
             res.json(state);
         });
     });
-})
+});
 
 app.get("/items", (req, res) => {
     const connection = mysql.createConnection(config);
@@ -105,7 +105,7 @@ app.get("/items", (req, res) => {
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        })
+        });
     });
 });
 
@@ -117,9 +117,9 @@ app.get("/bank/bank_name", (req, res) => {
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        })
-    })
-})
+        });
+    });
+});
 
 app.get("/bank", (req, res) => {
     const connection = mysql.createConnection(config);
@@ -132,9 +132,9 @@ app.get("/bank", (req, res) => {
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        })
-    })
-})
+        });
+    });
+});
 
 app.post("/bank", (req, res) => {
     const customer_id = Date.now();
@@ -143,13 +143,13 @@ app.post("/bank", (req, res) => {
     connection.connect(err => {
         if (err) throw err;
         const statement = `INSERT INTO BankAccount(customer_id, bank_number, user_id, bank_id) 
-                            VALUES('${customer_id}', '${bank_number}', '${user_id}', '${bank_id}')`
+                            VALUES('${customer_id}', '${bank_number}', '${user_id}', '${bank_id}')`;
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json({customer_id, user_id, bank_id, bank_number});
-        })
-    })
-})
+        });
+    });
+});
 
 app.get("/bill", (req, res) => {
     const user_id = req.query.user_id;
@@ -161,13 +161,13 @@ app.get("/bill", (req, res) => {
                             WHERE BD.user_id = ${user_id} 
                             AND BA.customer_id = BD.customer_id 
                             AND BD.bill_id = B.bill_id 
-                            AND BA.bank_id = BN.bank_id`
+                            AND BA.bank_id = BN.bank_id`;
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        })
-    })
-})
+        });
+    });
+});
 
 app.get("/bill/:id", (req, res) => {
     const bill_id = req.params.id;
@@ -181,9 +181,9 @@ app.get("/bill/:id", (req, res) => {
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        })
-    })
-})
+        });
+    });
+});
 
 app.post("/bill", (req, res) => {
     const bill_id = Date.now();
@@ -194,38 +194,37 @@ app.post("/bill", (req, res) => {
         let statement = `INSERT INTO Bill VALUES(${bill_id},${discount},'${address}','${bill_id}','${user_id}')`;
         connection.query(statement, (err, results) => {
             if (err) throw err;
-        })
+        });
         let updateStatement = '';
         let values = [];
         for (let i = 0; i < items.length; i++) {
-            updateStatement += `UPDATE Item SET amount = amount - ${items[i].buyAmount} WHERE item_id = ${items[i].id};`
+            updateStatement += `UPDATE Item SET amount = amount - ${items[i].buyAmount} WHERE item_id = ${items[i].id}`;
             values.push([items[i].buyAmount, bill_id, items[i].id, customer_id, user_id]);
         }
         connection.query(updateStatement, (err, results) => {
             if (err) throw err;
-        })
+        });
         connection.query("DELETE FROM Item WHERE amount = 0", (err, results) => {
             if (err) throw err;
-        })
-        statement = 'INSERT INTO BillDetail VALUES ?'
+        });
+        statement = 'INSERT INTO BillDetail VALUES ?';
         connection.query(statement, [values], (err, results) => {
             if (err) throw err;
             res.json({bill_id, ...req.body})
-        })
-    })
-})
+        });
+    });
+});
 
 app.post("/query", (req, res) => {
     const connection = mysql.createConnection(config);
     const statement = req.body.statement;
     connection.connect(err => {
         if (err) throw err;
-        console.log("Connected!");
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
         });
     });
-})
+});
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

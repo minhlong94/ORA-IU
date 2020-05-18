@@ -14,11 +14,11 @@ const Items = () => {
         const loadData = async () => {
             const response = await axios.get(ITEM);
             setItems(response.data)
-        }
+        };
         loadData();
-    }, [])
+    }, []);
     if (!localStorage.getItem(IS_LOGGED_IN))
-        return <Redirect to={"/login"}/>
+        return <Redirect to={"/login"}/>;
     return (
         <CardColumns>
             {items.map(item => <ProductItem key={item.item_id}

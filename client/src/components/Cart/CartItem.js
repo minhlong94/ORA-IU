@@ -10,7 +10,7 @@ const CartItem = ({id, name, buyAmount, price}) => {
         let filterCarts = carts.filter(value => value.id !== id);
         localStorage.setItem(CART, JSON.stringify(filterCarts));
         setCarts(filterCarts);
-    }
+    };
     return (
         <Row>
             <Col>

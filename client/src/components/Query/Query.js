@@ -2,9 +2,10 @@ import React, {useState} from "react";
 import {Button, Col, Form} from "react-bootstrap";
 import axios from "axios";
 
+import {QUERY} from "../../api_config";
 import "./Query.css";
 
-let initial_state = {
+const initial_state = {
     statement: '',
     result: '',
     errors: {
@@ -23,7 +24,7 @@ export default function Query() {
             result: ''
         });
 
-        const response = await axios.post("http://localhost:5000/query", {
+        const response = await axios.post(QUERY, {
             statement: state.statement
         });
         newState.result = JSON.stringify(response.data, undefined, 4);
@@ -50,7 +51,7 @@ export default function Query() {
                 <Form.Group controlId='statement'>
                     <Form.Label>Query:</Form.Label>
                     <Form.Control type='text' value={state.statement}
-                                  placeholder={'Please input a query statement'}
+                                  placeholder={'SELECT...'}
                                   onChange={handleChange} required/>
                     <Form.Control.Feedback type={'invalid'}>
                         {state.errors.statement}

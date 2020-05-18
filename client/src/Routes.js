@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter ,Route, Switch, Redirect } from "react-router-dom";
+import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 
 import {IS_LOGGED_IN} from "./LocalStorageKey";
 
@@ -43,6 +43,5 @@ export default function Routes() {
                 </Route>
             </Switch>
         </BrowserRouter>
-
     );
 }
