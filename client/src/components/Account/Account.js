@@ -57,7 +57,7 @@ const Account = () => {
     };
 
     return (
-        <div className={'bank-account'}>
+        <div className='bank-account'>
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="bank_name">
                     <Form.Label>Bank Name</Form.Label>
@@ -96,17 +96,19 @@ const Account = () => {
                     </Col>
                 </Form.Row>
 
-
-                <Button type={'submit'}>Add</Button>
+                <Button type='submit'>Add</Button>
             </Form>
-            <div className={'registered-account'}>
+            <br/><br/>
+
+            <div className='registered-account'>
                 <h1>Registered Account</h1>
                 <CardColumns>
                     {state.registered_bank_account.map(el =>
                         <AccountItem key={el.customer_id}
                                      id={el.customer_id}
                                      bank_name={el.name}
-                                     bank_number={el.bank_number}/>)}
+                                     bank_number={el.bank_number}/>
+                    )}
                 </CardColumns>
             </div>
         </div>
