@@ -32,7 +32,9 @@ const Account = () => {
         loadData();
     }, []);
 
-    const handleChange = event => setState({...state, [event.target.id]: event.target.value});
+    const handleChange = event => {
+        setState({...state, [event.target.id]: event.target.value});
+    };
 
     const handleSubmit = async event => {
         event.preventDefault();
@@ -72,25 +74,25 @@ const Account = () => {
                 <Form.Row>
                     <Col>
                         <Form.Group controlId={"first_component"}>
-                            <Form.Control type='no-spinner' onChange={handleChange}
+                            <Form.Control type='number' onChange={handleChange}
                                           maxLength={4} minLength={4}/>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group controlId={"second_component"}>
-                            <Form.Control type='no-spinner' onChange={handleChange}
+                            <Form.Control type='number' onChange={handleChange}
                                           maxLength={4} minLength={4}/>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group controlId={"third_component"}>
-                            <Form.Control type='no-spinner' onChange={handleChange}
+                            <Form.Control type='number' onChange={handleChange}
                                           maxLength={4} minLength={4}/>
                         </Form.Group>
                     </Col>
                     <Col>
                         <Form.Group controlId={"forth_component"}>
-                            <Form.Control type='no-spinner' onChange={handleChange}
+                            <Form.Control type='number' onChange={handleChange}
                                           maxLength={4} minLength={4}/>
                         </Form.Group>
                     </Col>
