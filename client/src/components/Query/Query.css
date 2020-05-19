@@ -1,9 +1,20 @@
 @media all and (min-width: 480px) {
     .Query {
-        padding: 60px 0;
+        padding-top: 60px;
+        padding-bottom: 10px;
     }
 
     .Query form {
+        margin: 0 auto;
+        max-width: 640px;
+    }
+
+    .Table {
+        margin: 0 auto;
+        max-width: 840px;
+    }
+
+    .Textbox {
         margin: 0 auto;
         max-width: 640px;
     }

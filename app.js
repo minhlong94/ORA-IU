@@ -91,7 +91,7 @@ app.post("/users/login", (req, res) => {
                     res.status(500).send(e);
                 }
             }
-            res.json(state);
+            await res.json(state);
         });
     });
 });
@@ -220,10 +220,14 @@ app.post("/query", (req, res) => {
     const statement = req.body.statement;
     connection.connect(err => {
         if (err) throw err;
-        connection.query(statement, (err, results) => {
-            if (err) throw err;
-            res.json(results);
-        });
+        try {
+            connection.query(statement, (err, results) => {
+                if (err) throw err;
+                res.json(results);
+            });
+        } catch (e) {
+            res.status(500).send();
+        }
     });
 });
 

@@ -4,7 +4,6 @@ import Routes from "./Routes";
 import NavigationBar from "./components/Utils/NavigationBar";
 import {UserContext} from "./context";
 
-import 'bootstrap/dist/css/bootstrap.css';
 import "./App.css";
 
 function App() {

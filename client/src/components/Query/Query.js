@@ -1,9 +1,10 @@
 import React, {useState} from "react";
-import {Button, Col, Form, Table} from "react-bootstrap";
+import {Button, Col, Form} from "react-bootstrap";
 import axios from "axios";
 
 import {QUERY} from "../../api_config";
 import "./Query.css";
+import {MDBDataTable} from "mdbreact";
 
 const initial_state = {
     statement: '',
@@ -52,6 +53,42 @@ export default function Query() {
         setShowTable(!showTable);
     };
 
+    const iterateKeys = (data) => {
+        if (!Array.isArray(data) || !data.length) return;
+        let key = Object.keys(data[0]); // get keys of the json file
+        let items = [];
+        for (let i = 0; i < key.length; ++i) {
+            items.push({
+                label: key[i],
+                field: key[i],
+                // sort: 'asc',
+                // width: 175
+            });
+        }
+        return items;
+    };
+
+    const getData = () => {
+        let columnValue = iterateKeys(data);
+        return {
+            columns: columnValue,
+            rows: data
+        };
+    };
+
+
+    const renderTable = () => {
+        let dataTable = getData();
+        // https://mdbootstrap.com/docs/react/tables/datatables/#docsTabsAPI
+        return (
+            <MDBDataTable
+                striped bordered hover small btn
+                noBottomColumns
+                data={dataTable}
+            />
+        );
+    };
+
     function renderTextbox() {
         return (
             <Form.Group controlId='result'>
@@ -63,55 +100,55 @@ export default function Query() {
         )
     }
 
-    function renderTable() {
-        if (!Array.isArray(data) || !data.length) {
-            return (
-                <Table striped bordered hover>
-                    <thead align={'center'}>
-                    <tr>
-                        <th>NO DATA</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td align={'center'}>NO DATA</td>
-                    </tr>
-                    </tbody>
-                </Table>
-            )
-        }
-
-        return (
-            <Table striped bordered hover>
-                <thead align={'center'}>
-                <tr>
-                    {Object.entries(data[0]).map(element => {
-                        return (
-                            <th>
-                                {element[0]}
-                            </th>
-                        )
-                    })}
-                </tr>
-                </thead>
-                <tbody>
-                {data.map((item, key) => {
-                    return (
-                        <tr key={key}>
-                            {Object.entries(item).map(element => {
-                                return (
-                                    <td>
-                                        {element[1]}
-                                    </td>
-                                )
-                            })}
-                        </tr>
-                    )
-                })}
-                </tbody>
-            </Table>
-        )
-    }
+    // function renderTable() {
+    //     if (!Array.isArray(data) || !data.length) {
+    //         return (
+    //             <Table striped bordered hover>
+    //                 <thead align={'center'}>
+    //                 <tr>
+    //                     <th>NO DATA</th>
+    //                 </tr>
+    //                 </thead>
+    //                 <tbody>
+    //                 <tr>
+    //                     <td align={'center'}>NO DATA</td>
+    //                 </tr>
+    //                 </tbody>
+    //             </Table>
+    //         )
+    //     }
+    //
+    //     return (
+    //         <Table striped bordered hover>
+    //             <thead align={'center'}>
+    //             <tr>
+    //                 {Object.entries(data[0]).map(element => {
+    //                     return (
+    //                         <th>
+    //                             {element[0]}
+    //                         </th>
+    //                     )
+    //                 })}
+    //             </tr>
+    //             </thead>
+    //             <tbody>
+    //             {data.map((item, key) => {
+    //                 return (
+    //                     <tr key={key}>
+    //                         {Object.entries(item).map(element => {
+    //                             return (
+    //                                 <td>
+    //                                     {element[1]}
+    //                                 </td>
+    //                             )
+    //                         })}
+    //                     </tr>
+    //                 )
+    //             })}
+    //             </tbody>
+    //         </Table>
+    //     )
+    // }
 
     function renderForm() {
         return (
@@ -141,7 +178,7 @@ export default function Query() {
                         </Col>
                     </Form.Row>
 
-                    <br/><br/>
+                    <br/>
 
                     <Form.Row>
                         <Col>
@@ -153,8 +190,6 @@ export default function Query() {
                             </Button>
                         </Col>
                     </Form.Row>
-
-                    {showTable ? renderTable() : renderTextbox()}
                 </Form>
             </div>
         )
@@ -163,6 +198,13 @@ export default function Query() {
     return (
         <React.Fragment>
             {renderForm()}
+            <div align={'center'}>
+                {showTable ? <div className={'Table'}>
+                    {renderTable()}
+                </div> : <div className={'Textbox'}>
+                    {renderTextbox()}
+                </div>}
+            </div>
         </React.Fragment>
     );
 }
