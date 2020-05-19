@@ -18,4 +18,39 @@
         margin: 0 auto;
         max-width: 640px;
     }
+
+    .blueTable td, table.blueTable th {
+        border: 1px solid #AAAAAA;
+        padding: 3px 2px;
+    }
+
+    .blueTable tbody td {
+        font-size: 13px;
+    }
+
+    .blueTable tr:nth-child(even) {
+        background: #D0E4F5;
+    }
+
+    .blueTable thead {
+        background: #1C6EA4;
+        background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+        background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+        background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+        border-bottom: 2px solid #444444;
+    }
+
+    .blueTable thead th {
+        border: 1px solid #AAAAAA;
+        font-size: 15px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-align: center;
+        border-left: 2px solid #D0E4F5;
+        background: #1C6EA4;
+    }
+
+    .blueTable thead th:first-child {
+        border-left: none;
+    }
 }

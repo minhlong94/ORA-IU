@@ -61,8 +61,7 @@ export default function Query() {
             items.push({
                 label: key[i],
                 field: key[i],
-                // sort: 'asc',
-                // width: 175
+                sort: 'asc'
             });
         }
         return items;
@@ -85,6 +84,7 @@ export default function Query() {
                 striped bordered hover small btn
                 noBottomColumns
                 data={dataTable}
+                className={'blueTable'}
             />
         );
     };
