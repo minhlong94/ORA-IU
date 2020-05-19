@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import {Button, Form} from 'react-bootstrap';
-import {Link, Redirect} from "react-router-dom";
 
+import 'bootstrap/dist/css/bootstrap.css';
+import './Signup.css';
+import {Link, Redirect} from "react-router-dom";
 import {IS_LOGGED_IN} from "../../LocalStorageKey";
 
-import './Signup.css';
-
+import axios from "axios";
 import {USER} from "../../api_config";
-
-const axios = require('axios');
 
 const initial_state = {
     first_name: '',
@@ -21,7 +20,7 @@ const initial_state = {
         confirmPassword: 'This field is required.',
         username: 'This field is required.'
     }
-};
+}
 
 export default function Signup() {
 
@@ -49,7 +48,7 @@ export default function Signup() {
         if (fields.password.length < 8) {
             newField.password = '';
             newField.confirmPassword = '';
-            newField.errors.password = 'Password must be at least 8 characters.';
+            newField.errors.password = 'Password must be at least 8 characters.'
             newValidated = false;
         } else if (fields.confirmPassword !== fields.password) {
             newField.password = '';
@@ -79,7 +78,7 @@ export default function Signup() {
         }
 
         if (localStorage.getItem(IS_LOGGED_IN))
-            return <Redirect to={'/items'}/>;
+            return <Redirect to={'/items'}/>
         return (
             <div className='Signup'>
                 <Form noValidate validated={validated.toString()} onSubmit={handleSubmit}>

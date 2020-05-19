@@ -1,24 +1,24 @@
-// TODO: Generate a list of cards of item
 import React, {useEffect, useState} from 'react';
 import {CardColumns} from 'react-bootstrap';
+import ProductItem from "./ProductItem";
+import {CURRENT_USER, IS_LOGGED_IN, IS_REGISTERED} from "../../LocalStorageKey";
 import {Redirect} from "react-router-dom";
 import axios from "axios";
-
-import ProductItem from "./ProductItem";
-import {IS_LOGGED_IN} from "../../LocalStorageKey";
-import {ITEM} from "../../api_config";
+import {BANK, ITEM} from "../../api_config";
 
 const Items = () => {
     const [items, setItems] = useState([]);
     useEffect(() => {
         const loadData = async () => {
             const response = await axios.get(ITEM);
-            setItems(response.data)
-        };
+            setItems(response.data);
+        }
         loadData();
-    }, []);
+    }, [])
     if (!localStorage.getItem(IS_LOGGED_IN))
-        return <Redirect to={"/login"}/>;
+        return <Redirect to={"/login"}/>
+    if (!localStorage.getItem(IS_REGISTERED) || localStorage.getItem(IS_REGISTERED) === "false")
+        return <Redirect to={"/account"}/>
     return (
         <CardColumns>
             {items.map(item => <ProductItem key={item.item_id}

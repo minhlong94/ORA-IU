@@ -1,22 +1,22 @@
 import React, {useContext, useState} from "react";
 import {Button, Form} from "react-bootstrap";
-import {Redirect} from "react-router-dom";
-import axios from "axios";
-
-import {UserContext} from "../../context";
-import {CURRENT_USER, IS_LOGGED_IN} from "../../LocalStorageKey";
-import {USER} from "../../api_config";
+import {Link, Redirect} from "react-router-dom";
 
 import "./Login.css";
+import {UserContext} from "../../context";
+import {CURRENT_USER, IS_LOGGED_IN} from "../../LocalStorageKey";
 
-const initial_state = {
+import axios from "axios";
+import {USER} from "../../api_config";
+
+let initial_state = {
     username: '',
     password: '',
     errors: {
         username: 'This field is required',
         password: 'This field is required'
     }
-};
+}
 
 export default function Login() {
     const [state, setState] = useState(initial_state);
@@ -56,12 +56,12 @@ export default function Login() {
             ...state,
             [event.target.id]: event.target.value
         })
-    };
+    }
 
 
     if (localStorage.getItem(IS_LOGGED_IN)) {
         return (
-            <Redirect to={'/items'}/>
+            <Redirect to={'/account'}/>
         )
     }
 
@@ -93,6 +93,9 @@ export default function Login() {
                     Login
                 </Button>
             </Form>
+            <div className={'signup-redirect'}>
+                Not have an account yet? <Link to={'/signup'}>Signup</Link>
+            </div>
         </div>
     );
 }
