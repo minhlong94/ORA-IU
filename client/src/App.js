@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 
 import Routes from "./Routes";
-import NavigationBar from "./components/Utils/NavigationBar";
+import NavigationBar from "./components/NavigationBar/NavigationBar";
 import {UserContext} from "./context";
 
 import "./App.css";
