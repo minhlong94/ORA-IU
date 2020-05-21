@@ -1,4 +1,9 @@
 @media all and (min-width: 480px) {
+    .warning {
+        margin: 0 auto;
+        max-width: 640px;
+    }
+
     .Query {
         padding-top: 60px;
         padding-bottom: 10px;
@@ -52,5 +57,9 @@
 
     .blueTable thead th:first-child {
         border-left: none;
+    }
+
+    .tab {
+        padding-left: 20px;
     }
 }

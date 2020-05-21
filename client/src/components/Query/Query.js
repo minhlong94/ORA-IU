@@ -5,6 +5,7 @@ import axios from "axios";
 import {QUERY} from "../../api_config";
 import "./Query.css";
 import {MDBDataTable} from "mdbreact";
+import Alert from "react-bootstrap/Alert";
 
 const initial_state = {
     statement: '',
@@ -14,9 +15,12 @@ const initial_state = {
     }
 };
 
+const initial_data = [];
+
 export default function Query() {
     const [state, setState] = useState(initial_state);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(initial_data);
+    const [show, setShow] = useState(true);
     const [showTable, setShowTable] = useState(true);
 
     const handleSubmit = async event => {
@@ -42,11 +46,12 @@ export default function Query() {
         setState({
             ...state,
             [event.target.id]: event.target.value
-        })
+        });
     };
 
     const reset = () => {
         setState(initial_state);
+        setData(initial_data);
     };
 
     const changeDisplay = () => {
@@ -100,59 +105,38 @@ export default function Query() {
         )
     }
 
-    // function renderTable() {
-    //     if (!Array.isArray(data) || !data.length) {
-    //         return (
-    //             <Table striped bordered hover>
-    //                 <thead align={'center'}>
-    //                 <tr>
-    //                     <th>NO DATA</th>
-    //                 </tr>
-    //                 </thead>
-    //                 <tbody>
-    //                 <tr>
-    //                     <td align={'center'}>NO DATA</td>
-    //                 </tr>
-    //                 </tbody>
-    //             </Table>
-    //         )
-    //     }
-    //
-    //     return (
-    //         <Table striped bordered hover>
-    //             <thead align={'center'}>
-    //             <tr>
-    //                 {Object.entries(data[0]).map(element => {
-    //                     return (
-    //                         <th>
-    //                             {element[0]}
-    //                         </th>
-    //                     )
-    //                 })}
-    //             </tr>
-    //             </thead>
-    //             <tbody>
-    //             {data.map((item, key) => {
-    //                 return (
-    //                     <tr key={key}>
-    //                         {Object.entries(item).map(element => {
-    //                             return (
-    //                                 <td>
-    //                                     {element[1]}
-    //                                 </td>
-    //                             )
-    //                         })}
-    //                     </tr>
-    //                 )
-    //             })}
-    //             </tbody>
-    //         </Table>
-    //     )
-    // }
-
     function renderForm() {
         return (
             <div className='Query'>
+                <div className='warning'>
+                    <Alert show={show} variant="warning">
+                        <Alert.Heading>Warning</Alert.Heading>
+                        <p>
+                            <strong>This is a dangerous feature and should not be included in any website!</strong>
+                        </p>
+                        <hr/>
+                        <p>
+                            Name of the tables in the database and its attributes are:<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Customer(username, password, user_id, first_name, last_name)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Class(class_id, class_name)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Supplier(supplier_id, supplier_name)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Bill(bill_id, discount, address, timestamp, user_id)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;BankName(bank_id, name)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;BankAccount(customer_id, bank_number, user_id, bank_id)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Item(item_id, item_name, price, amount, class_id, supplier_id)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;BillDetail(amount, bill_id, item_id, customer_id, user_id)<br/>
+                        </p>
+
+                        <div align={'right'}>
+                            <Button onClick={() => setShow(false)} variant="outline-warning">
+                                Close
+                            </Button>
+                        </div>
+                    </Alert>
+
+                    {!show && <Button onClick={() => setShow(true)}>Show Alert</Button>}
+                </div>
+
                 <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group controlId='statement'>
                         <Form.Label>Query:</Form.Label>
