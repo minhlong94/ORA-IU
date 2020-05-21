@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Card, Col, Form} from "react-bootstrap"
-
+import {Card, Button, Form, Col} from "react-bootstrap"
 import {CART} from "../../LocalStorageKey";
 
 const ProductItem = ({id, name, price, maxCount, supply_name, class_name}) => {
@@ -21,7 +20,7 @@ const ProductItem = ({id, name, price, maxCount, supply_name, class_name}) => {
         }
         localStorage.setItem(CART, JSON.stringify(carts));
         setBuyAmount(0);
-    };
+    }
 
 
     return (

@@ -1,27 +1,3 @@
-#first_component::-webkit-inner-spin-button,
-#first_component::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-#second_component::-webkit-inner-spin-button,
-#second_component::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-#third_component::-webkit-inner-spin-button,
-#third_component::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-#forth_component::-webkit-inner-spin-button,
-#forth_component::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
 @media all and (min-width: 480px) {
     .bank-account {
         padding: 60px 0;
