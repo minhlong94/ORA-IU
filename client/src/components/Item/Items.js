@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {CardColumns} from 'react-bootstrap';
 import ProductItem from "./ProductItem";
-import {CURRENT_USER, IS_LOGGED_IN, IS_REGISTERED} from "../../LocalStorageKey";
+import {IS_LOGGED_IN, IS_REGISTERED} from "../../LocalStorageKey";
 import {Redirect} from "react-router-dom";
 import axios from "axios";
-import {BANK, ITEM} from "../../api_config";
+import {ITEM} from "../../api_config";
 
 const Items = () => {
     const [items, setItems] = useState([]);

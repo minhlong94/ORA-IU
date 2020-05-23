@@ -7,10 +7,10 @@ import {BANK, BILL} from "../../api_config";
 import axios from "axios";
 import {Redirect} from "react-router-dom";
 
-const BillItem = ({id, bank_account, items, timestamp, bank_name, address}) => {
+const BillItem = ({id, bank_account, discount, items, timestamp, bank_name, address}) => {
     let totalPrice = 0;
     for (let i=0; i<items.length; ++i) {
-        totalPrice += items[i].price * items[i].amount;
+        totalPrice += !discount ? items[i].price * items[i].buyAmount : items[i].price * items[i].buyAmount * discount;
     }
     return (
         <Card style={{ width: '21rem' }} key={id}>
@@ -26,7 +26,7 @@ const BillItem = ({id, bank_account, items, timestamp, bank_name, address}) => {
                 </Card.Text>
                 <Card.Text>
                     <b>Items:</b>
-                    {items.map(val => <p>{val.item_name} {val.amount} {val.price}</p>)}
+                    {items.map(val => <p>{val.item_name} {val.buyAmount} {val.price}</p>)}
                 </Card.Text>
                 <Card.Text>
                     <b>Total price: </b> {totalPrice}
@@ -70,7 +70,11 @@ const initialField = {
     bank_name: '',
     bank_number: '',
     address: '',
-    account_options: []
+    account_options: [],
+    errors: {
+        bank: '',
+        address: ''
+    }
 }
 
 const Cart = () => {
@@ -102,38 +106,62 @@ const Cart = () => {
         const loadData = async () => {
             let user = JSON.parse(localStorage.getItem(CURRENT_USER));
             const response = await axios.get(`${BILL}?user_id=${user.user_id}`);
-            let newBill = response.data;
-            for (let i=0; i<newBill.length; ++i) {
-                newBill[i].items = (await axios.get(`${BILL}/${newBill[i].bill_id}`)).data;
-            }
+            let newBill = response.data.bills;
+            console.log(newBill);
             setBills(newBill);
         }
         loadData();
     }, [])
 
-    const handleSubmit = async event => {
-        event.preventDefault();
-        const user = JSON.parse(localStorage.getItem(CURRENT_USER));
-        const chosenAccount = field.account_options.find(value => value.bank_number === field.bank_number);
-        const submitData = {
-            customer_id: chosenAccount.customer_id,
-            discount: null,
-            address: field.address,
-            user_id: user.user_id,
-            items: carts.map(val => {
-                let returnObj = {};
-                returnObj.id = val.id;
-                returnObj.buyAmount = val.buyAmount;
-                return returnObj;
-            })
+    const createAccountOption = () => {
+        let availableBankName = [];
+        for (let item of available) {
+            if (!availableBankName.find(val => val === item.name)) availableBankName.push(item.name)
         }
-        await axios.post(`${BILL}`,submitData);
-        window.location.reload();
-        setCarts([]);
-        localStorage.setItem(CART, JSON.stringify([]));
+        return availableBankName;
     }
 
-    const handleChange = event => setField({...field, [event.target.id]: event.target.value});
+    const postData = async submit_data => await axios.post(`${BILL}`, submit_data);
+
+    const handleSubmit = event => {
+        event.preventDefault();
+        let newField = {...field}
+        if (field.bank_name === '' || field.bank_name === "Choose..." ||
+            field.bank_number === '' || field.bank_number === "Choose..."){
+            newField.errors.bank = 'This field is required';
+        }
+        else if (field.address === '')
+            newField.errors.address = 'This field is required';
+        else {
+            const user = JSON.parse(localStorage.getItem(CURRENT_USER));
+            const chosenAccount = field.account_options.find(value => value.bank_number === field.bank_number);
+            const submitData = {
+                customer_id: chosenAccount.customer_id,
+                discount: null,
+                address: field.address,
+                user_id: user.user_id,
+                items: carts.map(val => {
+                    let returnObj = {};
+                    returnObj.id = val.id;
+                    returnObj.buyAmount = val.buyAmount;
+                    return returnObj;
+                })
+            }
+            postData(submitData)
+            localStorage.setItem(CART, JSON.stringify([]));
+            window.location.reload();
+        }
+        setField(newField);
+    }
+
+    const handleChange = event => {
+        setField({...field,
+            errors: {
+                bank: '',
+                address: ''
+            },
+            [event.target.id]: event.target.value});
+    }
 
     if (!localStorage.getItem(IS_REGISTERED) || localStorage.getItem(IS_REGISTERED) === "false")
         return <Redirect to={'/account'}/>
@@ -160,9 +188,7 @@ const Cart = () => {
                             <Form.Group controlId={'bank_name'}>
                                 <Form.Control as={'select'} onChange={handleChange}>
                                     <option>Choose...</option>
-                                    {available.map(val => (
-                                        <option>{val.name}</option>
-                                    ))}
+                                    {createAccountOption().map(val => <option>{val}</option>)}
                                 </Form.Control>
                             </Form.Group>
                         </Col>
@@ -176,10 +202,16 @@ const Cart = () => {
                             </Form.Group>
                         </Col>
                     </Form.Row>
+                    <div style={{color:"red"}}>
+                        {field.errors.bank}
+                    </div>
                     <Form.Group controlId={'address'}>
                         <Form.Label>Address</Form.Label>
                         <Form.Control type={'text'} onChange={handleChange}/>
                     </Form.Group>
+                    <div style={{color:'red'}}>
+                        {field.errors.address}
+                    </div>
                     <Button type={'submit'}>Buy</Button>
                 </Form>
             }
@@ -188,7 +220,7 @@ const Cart = () => {
                 <CardColumns>
                     {bills.map(bill => (
                         <BillItem id={bill.bill_id} bank_account={bill.bank_number} items={bill.items}
-                                  timestamp={bill.timestamp} bank_name={bill.name} address={bill.address}/>
+                                  timestamp={bill.timestamp} bank_name={bill.bank_name} address={bill.address}/>
                     ))}
                 </CardColumns>
             </div>

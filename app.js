@@ -1,5 +1,3 @@
-// TODO: Implement route that can add transaction to the database system
-
 const mysql = require('mysql');
 const express = require('express');
 const cors = require('cors');
@@ -16,7 +14,7 @@ app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('<h1>Server is running</h1>');
-});
+})
 
 app.get('/users', (req, res) => {
     const connection = mysql.createConnection(config);
@@ -29,7 +27,7 @@ app.get('/users', (req, res) => {
             res.json(results);
         });
     });
-});
+})
 
 app.post('/users', async (req, res) => {
     try {
@@ -62,39 +60,42 @@ app.post("/users/login", (req, res) => {
             username: '',
             password: ''
         }
-    };
+    }
     const minPasswordLength = 8;
     connection.connect(err => {
         if (err) throw err;
-        console.log("Connected!");
         const statement = `SELECT * FROM Customer WHERE username='${req.body.username}'`;
         connection.query(statement, async (err, results) => {
             if (err) throw err;
             if (results.length === 0) {
                 state.valid = false;
                 state.errors.username = 'Username does not exist';
-            } else if (req.body.password.length < minPasswordLength) {
+            }
+            else if (req.body.password.length < minPasswordLength) {
                 state.valid = false;
                 state.errors.password = 'Password must contain at least 8 characters';
-            } else {
+            }
+            else {
                 try {
                     if (!await bcrypt.compare(req.body.password, results[0].password)) {
                         state.valid = false;
                         state.errors.password = 'Incorrect password!';
-                    } else {
+                    }
+                    else {
                         state.user_id = results[0].user_id;
                         state.username = results[0].username;
                         state.first_name = results[0].first_name;
                         state.last_name = results[0].last_name;
                     }
-                } catch (e) {
+                }
+                catch (e) {
                     res.status(500).send(e);
                 }
             }
-            await res.json(state);
+            res.json(state);
         });
     });
-});
+})
 
 app.get("/items", (req, res) => {
     const connection = mysql.createConnection(config);
@@ -105,7 +106,7 @@ app.get("/items", (req, res) => {
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        });
+        })
     });
 });
 
@@ -117,9 +118,9 @@ app.get("/bank/bank_name", (req, res) => {
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        });
-    });
-});
+        })
+    })
+})
 
 app.get("/bank", (req, res) => {
     const connection = mysql.createConnection(config);
@@ -127,14 +128,14 @@ app.get("/bank", (req, res) => {
     connection.connect(err => {
         if (err) throw err;
         const statement = `SELECT BA.customer_id, BA.bank_number, BA.user_id, BN.name 
-                        FROM BankAccount BA, BankName BN 
-                        WHERE BA.bank_id = BN.bank_id AND BA.user_id = ${user_id}`;
+                        FROM BankAccount BA JOIN BankName BN ON BA.bank_id = BN.bank_id 
+                        WHERE BA.user_id = ${user_id}`;
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        });
-    });
-});
+        })
+    })
+})
 
 app.post("/bank", (req, res) => {
     const customer_id = Date.now();
@@ -143,31 +144,76 @@ app.post("/bank", (req, res) => {
     connection.connect(err => {
         if (err) throw err;
         const statement = `INSERT INTO BankAccount(customer_id, bank_number, user_id, bank_id) 
-                            VALUES('${customer_id}', '${bank_number}', '${user_id}', '${bank_id}')`;
+                            VALUES('${customer_id}', '${bank_number}', '${user_id}', '${bank_id}')`
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json({customer_id, user_id, bank_id, bank_number});
-        });
-    });
-});
+        })
+    })
+})
 
 app.get("/bill", (req, res) => {
     const user_id = req.query.user_id;
     const connection = mysql.createConnection(config);
+
     connection.connect(err => {
         if (err) throw err;
-        const statement = `SELECT DISTINCT BN.name, BA.bank_number, BD.bill_id, B.address, B.timestamp 
-                            FROM BankName BN, BankAccount BA, BillDetail BD, Bill B 
-                            WHERE BD.user_id = ${user_id} 
-                            AND BA.customer_id = BD.customer_id 
-                            AND BD.bill_id = B.bill_id 
-                            AND BA.bank_id = BN.bank_id`;
+        const statement = `WITH 
+	                            BC AS (
+		                            SELECT C.*, B.bill_id, B.address, B.discount, B.timestamp, B.customer_id
+		                            FROM Customer C JOIN Bill B ON C.user_id = B.user_id
+	                            ),
+	                            BBD AS (
+		                            SELECT B.*, BD.item_id, Bd.amount 
+		                            FROM Bill B JOIN BillDetail BD ON B.bill_id = BD.bill_id
+	                            )
+                            SELECT 
+	                            BC.user_id, BC.bill_id, BC.customer_id, 
+	                            BA.bank_number, 
+	                            BN.name, 
+	                            BC.address, BC.discount, BC.timestamp,
+	                            BBD.item_id, BBD.amount, I.price, I.item_name
+                            FROM BC JOIN BBD ON BC.bill_id = BBD.bill_id
+		                            JOIN BankAccount BA ON BA.customer_id = BC.customer_id
+		                            JOIN Item I ON I.item_id = BBD.item_id
+		                            JOIN BankName BN ON BN.bank_id = BA.bank_id
+                                    WHERE BC.user_id = '${user_id}';`
         connection.query(statement, (err, results) => {
             if (err) throw err;
-            res.json(results);
-        });
-    });
-});
+            let resObj = {user_id, bills: []}
+            for (const bill of results) {
+                if (!resObj.bills.find(val => val.bill_id === bill.bill_id))
+                    resObj.bills.push({
+                        bill_id: bill.bill_id,
+                        customer_id: bill.customer_id,
+                        bank_number: bill.bank_number,
+                        bank_name: bill.name,
+                        address: bill.address,
+                        discount: bill.discount,
+                        timestamp: bill.timestamp,
+                        items: [
+                            {
+                                item_id: bill.item_id,
+                                item_name: bill.item_name,
+                                price: bill.price,
+                                buyAmount: bill.amount
+                            }
+                        ]
+                    })
+                else {
+                    let idx = resObj.bills.findIndex(val => val.bill_id === bill.bill_id);
+                    resObj.bills[idx].items.push({
+                        item_id: bill.item_id,
+                        item_name: bill.item_name,
+                        price: bill.price,
+                        buyAmount: bill.amount
+                    })
+                }
+            }
+            res.json(resObj);
+        })
+    })
+})
 
 app.get("/bill/:id", (req, res) => {
     const bill_id = req.params.id;
@@ -175,15 +221,14 @@ app.get("/bill/:id", (req, res) => {
     connection.connect(err => {
         if (err) throw err;
         const statement = `SELECT I.item_name, I.price, BD.amount 
-                        FROM Item I, BillDetail BD 
-                        WHERE I.item_id = BD.item_id 
-                        AND BD.bill_id = ${bill_id}`;
+                        FROM Item I JOIN BillDetail BD ON I.item_id = BD.item_id
+                        WHERE BD.bill_id = ${bill_id}`;
         connection.query(statement, (err, results) => {
             if (err) throw err;
             res.json(results);
-        });
-    });
-});
+        })
+    })
+})
 
 app.post("/bill", (req, res) => {
     const bill_id = Date.now();
@@ -191,29 +236,28 @@ app.post("/bill", (req, res) => {
     const connection = mysql.createConnection({...config, multipleStatements: true});
     connection.connect(err => {
         if (err) throw err;
-        let statement = `INSERT INTO Bill VALUES(${bill_id},${discount},'${address}','${bill_id}','${user_id}')`;
+        let statement = `INSERT INTO Bill VALUES(${bill_id},${discount},'${address}','${bill_id}', ${customer_id},'${user_id}')`;
         connection.query(statement, (err, results) => {
             if (err) throw err;
-        });
+        })
         let updateStatement = '';
         let values = [];
-        for (let i = 0; i < items.length; i++) {
-            updateStatement += `UPDATE Item SET amount = amount - ${items[i].buyAmount} WHERE item_id = ${items[i].id}`;
-            values.push([items[i].buyAmount, bill_id, items[i].id, customer_id, user_id]);
+        for (let i=0;i<items.length;i++){
+            updateStatement += `UPDATE Item SET amount = amount - ${items[i].buyAmount} WHERE item_id = ${items[i].id};`
+            values.push([items[i].buyAmount, bill_id, items[i].id]);
         }
         connection.query(updateStatement, (err, results) => {
             if (err) throw err;
-        });
+        })
         connection.query("DELETE FROM Item WHERE amount = 0", (err, results) => {
             if (err) throw err;
-        });
-        statement = 'INSERT INTO BillDetail VALUES ?';
+        })
+        statement = 'INSERT INTO BillDetail VALUES ?'
         connection.query(statement, [values], (err, results) => {
             if (err) throw err;
-            res.json({bill_id, ...req.body})
-        });
-    });
-});
+        })
+    })
+})
 
 app.post("/query", (req, res) => {
     const connection = mysql.createConnection(config);

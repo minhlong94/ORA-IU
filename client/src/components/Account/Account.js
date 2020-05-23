@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, CardColumns, Col, Form} from "react-bootstrap";
+import {Button, Card, CardColumns, Col, Form, Row} from "react-bootstrap";
 import axios from "axios";
 import "./Account.css";
 import {BANK} from "../../api_config";
@@ -27,7 +27,11 @@ const initialState = {
     first_component: '',
     second_component: '',
     third_component: '',
-    forth_component: ''
+    forth_component: '',
+    errors: {
+        bank_number: '',
+        bank_name: ''
+    }
 }
 
 const Account = () => {
@@ -49,30 +53,50 @@ const Account = () => {
         loadData();
     }, []);
 
-    const handleChange = event => setState({...state, [event.target.id]: event.target.value});
+    const handleChange = event => {
+
+        setState({...state,
+            errors: {
+                bank_number: '',
+                bank_name: ''
+            },
+            [event.target.id]: event.target.value
+        });
+    }
 
     const handleSubmit = async event => {
         event.preventDefault();
         let newState = {...state};
 
         const {first_component, second_component, third_component, forth_component} = state;
-        const bank_number = `${first_component}-${second_component}-${third_component}-${forth_component}`;
-        const chosen_bank = state.options.find(val => val.name === state.bank_name);
-        const bank_id = chosen_bank.bank_id;
-        const user = JSON.parse(localStorage.getItem(CURRENT_USER));
-        const user_id = user.user_id;
 
-        await axios.post(BANK, {bank_number, bank_id, user_id});
 
-        localStorage.setItem(IS_REGISTERED, true.toString());
+        if (state.bank_name === '' || state.bank_name === 'Choose...'){
+            newState.errors.bank_name = 'This field is required';
+        }
 
+        else if (first_component === '' || second_component === '' || third_component === '' || forth_component === ''){
+            newState.errors.bank_number = 'This field is required';
+        }
+
+        else {
+            const bank_number = `${first_component}-${second_component}-${third_component}-${forth_component}`;
+            const chosen_bank = state.options.find(val => val.name === state.bank_name);
+            const bank_id = chosen_bank.bank_id;
+            const user = JSON.parse(localStorage.getItem(CURRENT_USER));
+            const user_id = user.user_id;
+
+            await axios.post(BANK, {bank_number, bank_id, user_id});
+
+            localStorage.setItem(IS_REGISTERED, true.toString());
+            window.location.reload();
+        }
         newState.first_component = '';
         newState.second_component = '';
         newState.third_component = '';
         newState.forth_component = '';
         newState.bank_name = 'Choose...';
         setState(newState);
-        window.location.reload();
     }
 
     return (
@@ -86,12 +110,15 @@ const Account = () => {
                             <option key={el.id}>{el.name}</option>
                         ))}
                     </Form.Control>
+                    <div style={{color:"red"}}>
+                        {state.errors.bank_name}
+                    </div>
                 </Form.Group>
                 <Form.Label>Bank Number</Form.Label>
                 <Form.Row>
                     <Col>
                         <Form.Group controlId={"first_component"}>
-                            <Form.Control onChange={handleChange} value={state.first_component}/>
+                            <Form.Control onChange={handleChange} value={state.first_component} type={'text'}/>
                         </Form.Group>
                     </Col>
                     <Col>
@@ -110,8 +137,9 @@ const Account = () => {
                         </Form.Group>
                     </Col>
                 </Form.Row>
-
-
+                <div style={{color:"red"}}>
+                    {state.errors.bank_number}
+                </div>
                 <Button type={'submit'}>Add</Button>
             </Form>
             <div className={'registered-account'}>
