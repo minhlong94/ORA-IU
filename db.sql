@@ -13,17 +13,6 @@ CREATE TABLE Customer
   UNIQUE (username)
 );
 
-CREATE TABLE Bill
-(
-  bill_id VARCHAR(15) NOT NULL,
-  discount FLOAT,
-  address VARCHAR(50) NOT NULL,
-  timestamp VARCHAR(20) NOT NULL,
-  user_id VARCHAR(15) NOT NULL,
-  PRIMARY KEY (bill_id, user_id),
-  FOREIGN KEY (user_id) REFERENCES Customer(user_id)
-);
-
 CREATE TABLE Class
 (
   class_id INT NOT NULL,
@@ -61,7 +50,7 @@ CREATE TABLE Item
 CREATE TABLE BankAccount
 (
   customer_id VARCHAR(15) NOT NULL,
-  bank_number VARCHAR(25) NOT NULL,
+  bank_number VARCHAR(20) NOT NULL,
   user_id VARCHAR(15) NOT NULL,
   bank_id INT NOT NULL,
   PRIMARY KEY (customer_id, user_id, bank_id),
@@ -69,17 +58,26 @@ CREATE TABLE BankAccount
   FOREIGN KEY (bank_id) REFERENCES BankName(bank_id)
 );
 
+CREATE TABLE Bill
+(
+  bill_id VARCHAR(15) NOT NULL,
+  discount FLOAT,
+  address VARCHAR(50) NOT NULL,
+  timestamp VARCHAR(20) NOT NULL,
+  customer_id VARCHAR(15) NOT NULL,
+  user_id VARCHAR(15) NOT NULL,
+  PRIMARY KEY (bill_id, customer_id, user_id),
+  FOREIGN KEY (customer_id, user_id) REFERENCES BankAccount(customer_id, user_id)
+);
+
 CREATE TABLE BillDetail
 (
   amount INT NOT NULL,
   bill_id VARCHAR(15) NOT NULL,
   item_id VARCHAR(15) NOT NULL,
-  customer_id VARCHAR(15) NOT NULL,
-  user_id VARCHAR(15) NOT NULL,
-  PRIMARY KEY (bill_id, item_id, customer_id, user_id),
+  PRIMARY KEY (bill_id, item_id),
   FOREIGN KEY (bill_id) REFERENCES Bill(bill_id),
-  FOREIGN KEY (item_id) REFERENCES Item(item_id),
-  FOREIGN KEY (customer_id, user_id) REFERENCES BankAccount(customer_id, user_id)
+  FOREIGN KEY (item_id) REFERENCES Item(item_id)
 );
 
 INSERT INTO Class(class_id, class_name) VALUES(1,"Cooking");
