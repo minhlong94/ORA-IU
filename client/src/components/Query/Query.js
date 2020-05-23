@@ -120,11 +120,11 @@ export default function Query() {
                             &nbsp;&nbsp;&nbsp;&nbsp;Customer(username, password, user_id, first_name, last_name)<br/>
                             &nbsp;&nbsp;&nbsp;&nbsp;Class(class_id, class_name)<br/>
                             &nbsp;&nbsp;&nbsp;&nbsp;Supplier(supplier_id, supplier_name)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;Bill(bill_id, discount, address, timestamp, user_id)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;Bill(bill_id, discount, address, timestamp, customer_id, user_id)<br/>
                             &nbsp;&nbsp;&nbsp;&nbsp;BankName(bank_id, name)<br/>
                             &nbsp;&nbsp;&nbsp;&nbsp;BankAccount(customer_id, bank_number, user_id, bank_id)<br/>
                             &nbsp;&nbsp;&nbsp;&nbsp;Item(item_id, item_name, price, amount, class_id, supplier_id)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;BillDetail(amount, bill_id, item_id, customer_id, user_id)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;BillDetail(amount, bill_id, item_id)<br/>
                         </p>
 
                         <div align={'right'}>
