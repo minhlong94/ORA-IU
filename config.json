@@ -1,6 +1,6 @@
 {
-  "host": "",
-  "user": "",
-  "password": "",
-  "database": ""
+  "host": "localhost",
+  "user": "root",
+  "password": "johnuwu2000",
+  "database": "OnlineRetailDB"
 }

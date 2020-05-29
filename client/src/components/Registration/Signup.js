@@ -61,7 +61,7 @@ export default function Signup() {
         setFields(newField);
 
         if (newValidated) {
-            await axios.post("http://localhost:5000/users", {
+            await axios.post(USER, {
                 username: fields.username,
                 password: fields.password,
                 first_name: fields.first_name,

@@ -3,11 +3,13 @@ const express = require('express');
 const cors = require('cors');
 const config = require('./config.json');
 const bcrypt = require('bcrypt');
-const server_config = require("./server_config.json");
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
 
-const PORT = server_config.port;
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
@@ -110,6 +112,20 @@ app.get("/items", (req, res) => {
     });
 });
 
+app.post("/items", (req, res) => {
+    const {id, name, price, amount, class_id, supplier_id} = req.body;
+    const connection = mysql.createConnection(config);
+    connection.connect(err => {
+        if (err) throw err;
+        const statement = `INSERT INTO Item(item_id, item_name, price, amount, class_id, supplier_id)  
+                            VALUES('${id}','${name}','${price}','${amount}','${class_id}','${supplier_id}')`
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(req.body);
+        })
+    })
+})
+
 app.get("/bank/bank_name", (req, res) => {
     const connection = mysql.createConnection(config);
     connection.connect(err => {
@@ -158,26 +174,18 @@ app.get("/bill", (req, res) => {
 
     connection.connect(err => {
         if (err) throw err;
-        const statement = `WITH 
-	                            BC AS (
-		                            SELECT C.*, B.bill_id, B.address, B.discount, B.timestamp, B.customer_id
-		                            FROM Customer C JOIN Bill B ON C.user_id = B.user_id
-	                            ),
-	                            BBD AS (
-		                            SELECT B.*, BD.item_id, Bd.amount 
-		                            FROM Bill B JOIN BillDetail BD ON B.bill_id = BD.bill_id
-	                            )
-                            SELECT 
-	                            BC.user_id, BC.bill_id, BC.customer_id, 
-	                            BA.bank_number, 
-	                            BN.name, 
-	                            BC.address, BC.discount, BC.timestamp,
-	                            BBD.item_id, BBD.amount, I.price, I.item_name
-                            FROM BC JOIN BBD ON BC.bill_id = BBD.bill_id
-		                            JOIN BankAccount BA ON BA.customer_id = BC.customer_id
-		                            JOIN Item I ON I.item_id = BBD.item_id
-		                            JOIN BankName BN ON BN.bank_id = BA.bank_id
-                                    WHERE BC.user_id = '${user_id}';`
+        const statement = `SELECT
+                                C.user_id, B.bill_id, B.customer_id,
+                                BA.bank_number,
+                                BN.name,
+                                B.address, B.discount, B.timestamp,
+                                I.item_id, BD.amount, I.price, I.item_name
+                            FROM Bill B JOIN BillDetail BD ON B.bill_id = BD.bill_id
+                                        JOIN BankAccount BA on B.customer_id = BA.customer_id and B.user_id = BA.user_id
+                                        JOIN BankName BN on BA.bank_id = BN.bank_id
+                                        JOIN Customer C on BA.user_id = C.user_id
+                                        JOIN Item I on BD.item_id = I.item_id
+                            WHERE B.user_id = '${user_id}'`
         connection.query(statement, (err, results) => {
             if (err) throw err;
             let resObj = {user_id, bills: []}
@@ -274,5 +282,55 @@ app.post("/query", (req, res) => {
         }
     });
 });
+
+app.post('/supplier', (req, res) => {
+    const {id, name} = req.body;
+    const connection = mysql.createConnection(config);
+    connection.connect(err => {
+        if (err) throw err;
+        const statement = `INSERT INTO Supplier(supplier_id, supplier_name) VALUES('${id}', '${name}')`;
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(req.body);
+        })
+    })
+})
+
+app.get('/supplier', (req, res) => {
+    const connect = mysql.createConnection(config);
+    connect.connect(err => {
+        if (err) throw err;
+        const statement  = "SELECT * FROM Supplier";
+        connect.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(results);
+        })
+    })
+})
+
+app.post('/class', (req, res) => {
+    const {id, name} = req.body;
+    const connection = mysql.createConnection(config);
+    connection.connect(err => {
+        if (err) throw err;
+        const statement = `INSERT INTO Class(class_id, class_name) VALUES('${id}', '${name}')`;
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(req.body);
+        })
+    })
+})
+
+app.get('/class', (req, res) => {
+    const connection = mysql.createConnection(config);
+    connection.connect(err => {
+        if (err) throw err;
+        const statement = "SELECT * FROM Class";
+        connection.query(statement, (err, results) => {
+            if (err) throw err;
+            res.json(results);
+        })
+    })
+})
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

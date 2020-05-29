@@ -87,6 +87,8 @@ const Cart = () => {
 
     const [field, setField] = useState(initialField);
 
+    const [reload, setReload] = useState(false);
+
     useEffect(() => {
         const loadData = async () => {
             const user = JSON.parse(localStorage.getItem(CURRENT_USER));
@@ -130,8 +132,11 @@ const Cart = () => {
             field.bank_number === '' || field.bank_number === "Choose..."){
             newField.errors.bank = 'This field is required';
         }
-        else if (field.address === '')
+        if (field.address === '')
             newField.errors.address = 'This field is required';
+        if (newField.errors.address !== '' || newField.errors.bank !== '') {
+            setField(newField);
+        }
         else {
             const user = JSON.parse(localStorage.getItem(CURRENT_USER));
             const chosenAccount = field.account_options.find(value => value.bank_number === field.bank_number);
@@ -147,11 +152,10 @@ const Cart = () => {
                     return returnObj;
                 })
             }
-            postData(submitData)
             localStorage.setItem(CART, JSON.stringify([]));
             window.location.reload();
+            postData(submitData);
         }
-        setField(newField);
     }
 
     const handleChange = event => {

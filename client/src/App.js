@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 
 import Routes from "./Routes";
-import NavigationBar from "./components/Utils/NavigationBar";
+import NavigationBar from "./components/NavigationBar/NavigationBar";
 import {UserContext} from "./context";
 
 import "./App.css";
@@ -14,6 +14,8 @@ function App() {
         first_name: '',
         last_name: ''
     });
+
+    console.log(process.env.BASE_API_URL)
     return (
         <div className="App">
             <UserContext.Provider value={{validated, setValidated, user, setUser}}>
