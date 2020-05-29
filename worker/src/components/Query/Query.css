@@ -53,4 +53,9 @@
     .blueTable thead th:first-child {
         border-left: none;
     }
+
+    .query-error {
+        color: red;
+        text-align: center;
+    }
 }

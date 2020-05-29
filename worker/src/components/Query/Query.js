@@ -8,10 +8,7 @@ import {MDBDataTable} from "mdbreact";
 
 const initial_state = {
     statement: '',
-    result: '',
-    errors: {
-        statement: 'Please input a query statement!'
-    }
+    result: ''
 };
 
 export default function Query() {
@@ -100,69 +97,16 @@ export default function Query() {
         )
     }
 
-    // function renderTable() {
-    //     if (!Array.isArray(data) || !data.length) {
-    //         return (
-    //             <Table striped bordered hover>
-    //                 <thead align={'center'}>
-    //                 <tr>
-    //                     <th>NO DATA</th>
-    //                 </tr>
-    //                 </thead>
-    //                 <tbody>
-    //                 <tr>
-    //                     <td align={'center'}>NO DATA</td>
-    //                 </tr>
-    //                 </tbody>
-    //             </Table>
-    //         )
-    //     }
-    //
-    //     return (
-    //         <Table striped bordered hover>
-    //             <thead align={'center'}>
-    //             <tr>
-    //                 {Object.entries(data[0]).map(element => {
-    //                     return (
-    //                         <th>
-    //                             {element[0]}
-    //                         </th>
-    //                     )
-    //                 })}
-    //             </tr>
-    //             </thead>
-    //             <tbody>
-    //             {data.map((item, key) => {
-    //                 return (
-    //                     <tr key={key}>
-    //                         {Object.entries(item).map(element => {
-    //                             return (
-    //                                 <td>
-    //                                     {element[1]}
-    //                                 </td>
-    //                             )
-    //                         })}
-    //                     </tr>
-    //                 )
-    //             })}
-    //             </tbody>
-    //         </Table>
-    //     )
-    // }
-
     function renderForm() {
         return (
             <div className='Query'>
-                <Form noValidate onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit}>
                     <Form.Group controlId='statement'>
                         <Form.Label>Query:</Form.Label>
                         <Form.Control as="textarea" rows='5' type='text'
                                       value={state.statement}
                                       placeholder={'SELECT...\nFROM...\nWHERE...'}
                                       onChange={handleChange} required/>
-                        <Form.Control.Feedback type={'invalid'}>
-                            {state.errors.statement}
-                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Row>
