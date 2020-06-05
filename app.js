@@ -126,6 +126,24 @@ app.post("/items", (req, res) => {
     })
 })
 
+app.put("/items", (req, res) => {
+    const connection = mysql.createConnection(config);
+    const {id, name, price, amount, class_id, supplier_id} = req.body;
+    connection.connect(err => {
+        if (err) res.status(500).send();
+        const statement = `UPDATE Item SET item_name='${name}',
+                               price='${price}',
+                               amount='${amount}',
+                               class_id='${class_id}',
+                               supplier_id='${supplier_id}'
+                           WHERE item_id='${id}'`;
+        connection.query(statement, (err, results) => {
+            if (err) res.status(500).send(err);
+            res.json(req.body);
+        })
+    })
+})
+
 app.get("/bank/bank_name", (req, res) => {
     const connection = mysql.createConnection(config);
     connection.connect(err => {

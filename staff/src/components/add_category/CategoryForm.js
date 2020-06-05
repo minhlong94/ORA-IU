@@ -1,30 +1,30 @@
 import React, {useState} from 'react';
-import {Button, Form} from "react-bootstrap";
 import axios from "axios";
-import {SUPPLIER} from "../../api_config";
+import {CLASS} from "../../api_config";
+import {Button, Form} from "react-bootstrap";
 
 const initState = {
     id: Date.now(),
     name: ''
 }
 
-const SupplierForm = () => {
+const CategoryForm = () => {
     const [form, setForm] = useState(initState);
 
     const handleChange = event => setForm({...form, [event.target.id]: event.target.value});
 
     const handleSubmit = async event => {
         event.preventDefault();
-        await axios.post(SUPPLIER, form);
+        await axios.post(CLASS, form);
         alert("Add successful!")
         window.location.reload();
     }
 
     return (
-        <Form className={'worker-form'} onSubmit={handleSubmit}>
+        <Form className={'staff-form'} onSubmit={handleSubmit}>
             <Form.Group>
                 <Form.Label>
-                    Supplier ID
+                    Category (Class) ID
                 </Form.Label>
                 <Form.Control id={'id'}
                               onChange={handleChange}
@@ -36,7 +36,7 @@ const SupplierForm = () => {
             </Form.Group>
             <Form.Group>
                 <Form.Label>
-                    Supplier name
+                    Category (Class) name
                 </Form.Label>
                 <Form.Control id={'name'}
                               onChange={handleChange}
@@ -53,4 +53,4 @@ const SupplierForm = () => {
     );
 };
 
-export default SupplierForm;
+export default CategoryForm;

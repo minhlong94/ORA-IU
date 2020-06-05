@@ -6,7 +6,7 @@
   "scripts": {
     "client": "cd client && npm start",
     "server": "node app.js",
-    "staff": "cd admin && npm start",
+    "staff": "cd staff && npm start",
     "devClient": "concurrently \"npm run server\" \"npm run client\"",
     "devStaff": "concurrently \"npm run server\" \"npm run staff\"",
     "start": "concurrently \"npm run server\" \"npm run staff\" \"npm run client\""
