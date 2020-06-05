@@ -9,7 +9,10 @@
     "staff": "cd staff && npm start",
     "devClient": "concurrently \"npm run server\" \"npm run client\"",
     "devStaff": "concurrently \"npm run server\" \"npm run staff\"",
-    "start": "concurrently \"npm run server\" \"npm run staff\" \"npm run client\""
+    "start": "concurrently \"npm run server\" \"npm run staff\" \"npm run client\"",
+    "configClient": "cd client && npm install",
+    "configStaff": "cd staff && npm install",
+    "config": "npm install && npm run configClient && npm run configStaff"
   },
   "keywords": [],
   "author": "",
