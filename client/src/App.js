@@ -14,8 +14,7 @@ function App() {
         first_name: '',
         last_name: ''
     });
-
-    console.log(process.env.BASE_API_URL)
+    
     return (
         <div className="App">
             <UserContext.Provider value={{validated, setValidated, user, setUser}}>

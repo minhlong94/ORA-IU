@@ -37,8 +37,23 @@ https://github.com/minhlong94/ORA-IU.git
 ```
 ## Run
 Prerequesite: global dependencies have been installed.
+* Navigate to repository folder.
+* Run ``npm run config``
+* After configuration has been done, run ``npm run start``.
 
-*Update later*
+*Note*: For development purpose, we support different options for execution
+```bash
+npm run [options]
+==========================================================
+options:
+  - client: executing client page only (client front-end development)
+  - server: executing server only (server development)
+  - staff: executing staff page only (staff front-end development)
+  - devClient: executing client page + server (client-side development)
+  - devStaff: executing staff page + server (staff-side development)
+  - start: executing staff page + client page + server (deployment)
+  - config: configuring project
+```
 
 ## Basic web direction
 ### Client
@@ -49,7 +64,7 @@ Register -> Login -> Add Bank Account -> Purchase.
 * For create query (create new product, add new supplier, etc.), please navigate to ``Insert...`` (support adding new product, supplier, categories, and bank name).
 * For other queries, please navigate to ``Custom Query...`` (support for all kinds of query). However, this page is incomplete as compared to MySQL workbench (and other similar software); hence, MySQL is more recommended in such situation.
 
-## Further improvement
+## Further improvement (TODOS)
 ### Frontend
 * Make client site more user-friendly
 
