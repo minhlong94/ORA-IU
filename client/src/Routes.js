@@ -8,7 +8,6 @@ import Login from "./components/Login/Login";
 import Items from "./components/Item/Items";
 import Cart from "./components/Cart/Cart";
 import Account from "./components/Account/Account";
-import Query from "./components/Query/Query";
 
 export default function Routes() {
     return (
@@ -36,10 +35,6 @@ export default function Routes() {
 
                 <Route exact path={"/account"}>
                     <Account/>
-                </Route>
-
-                <Route exact path={"/query"}>
-                    <Query/>
                 </Route>
             </Switch>
         </BrowserRouter>

@@ -14,6 +14,7 @@ function App() {
         first_name: '',
         last_name: ''
     });
+    
     return (
         <div className="App">
             <UserContext.Provider value={{validated, setValidated, user, setUser}}>

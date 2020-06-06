@@ -5,22 +5,15 @@ import axios from "axios";
 import {QUERY} from "../../api_config";
 import "./Query.css";
 import {MDBDataTable} from "mdbreact";
-import Alert from "react-bootstrap/Alert";
 
 const initial_state = {
     statement: '',
-    result: '',
-    errors: {
-        statement: 'Please input a query statement!'
-    }
+    result: ''
 };
-
-const initial_data = [];
 
 export default function Query() {
     const [state, setState] = useState(initial_state);
-    const [data, setData] = useState(initial_data);
-    const [show, setShow] = useState(true);
+    const [data, setData] = useState([]);
     const [showTable, setShowTable] = useState(true);
 
     const handleSubmit = async event => {
@@ -46,12 +39,11 @@ export default function Query() {
         setState({
             ...state,
             [event.target.id]: event.target.value
-        });
+        })
     };
 
     const reset = () => {
         setState(initial_state);
-        setData(initial_data);
     };
 
     const changeDisplay = () => {
@@ -108,45 +100,13 @@ export default function Query() {
     function renderForm() {
         return (
             <div className='Query'>
-                <div className='warning'>
-                    <Alert show={show} variant="warning">
-                        <Alert.Heading>Warning</Alert.Heading>
-                        <p>
-                            <strong>This is a dangerous feature and should not be included in any website!</strong>
-                        </p>
-                        <hr/>
-                        <p>
-                            Name of the tables in the database and its attributes are:<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;Customer(username, password, user_id, first_name, last_name)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;Class(class_id, class_name)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;Supplier(supplier_id, supplier_name)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;Bill(bill_id, discount, address, timestamp, customer_id, user_id)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;BankName(bank_id, name)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;BankAccount(customer_id, bank_number, user_id, bank_id)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;Item(item_id, item_name, price, amount, class_id, supplier_id)<br/>
-                            &nbsp;&nbsp;&nbsp;&nbsp;BillDetail(amount, bill_id, item_id)<br/>
-                        </p>
-
-                        <div align={'right'}>
-                            <Button onClick={() => setShow(false)} variant="outline-warning">
-                                Close
-                            </Button>
-                        </div>
-                    </Alert>
-
-                    {!show && <Button onClick={() => setShow(true)}>Show Alert</Button>}
-                </div>
-
-                <Form noValidate onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit}>
                     <Form.Group controlId='statement'>
                         <Form.Label>Query:</Form.Label>
                         <Form.Control as="textarea" rows='5' type='text'
                                       value={state.statement}
                                       placeholder={'SELECT...\nFROM...\nWHERE...'}
                                       onChange={handleChange} required/>
-                        <Form.Control.Feedback type={'invalid'}>
-                            {state.errors.statement}
-                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Row>

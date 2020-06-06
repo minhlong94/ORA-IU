@@ -49,7 +49,7 @@ const CartItem = ({id, name, buyAmount, price}) => {
         let filterCarts = carts.filter(value => value.id !== id);
         localStorage.setItem(CART, JSON.stringify(filterCarts));
         setCarts(filterCarts);
-    };
+    }
     return (
         <Row>
             <Col>
@@ -75,7 +75,7 @@ const initialField = {
         bank: '',
         address: ''
     }
-};
+}
 
 const Cart = () => {
     const [carts, setCarts] = useState(!JSON.parse(localStorage.getItem(CART))
@@ -87,20 +87,22 @@ const Cart = () => {
 
     const [field, setField] = useState(initialField);
 
+    const [reload, setReload] = useState(false);
+
     useEffect(() => {
         const loadData = async () => {
             const user = JSON.parse(localStorage.getItem(CURRENT_USER));
             const response = await axios.get(`${BANK}?user_id=${user.user_id}`);
             let newAvailable = response.data;
             setAvailable(newAvailable);
-        };
+        }
         loadData();
     }, []);
     useEffect(() => {
         let newField = {...field};
-        newField.account_options = available.filter(val => val.name === field.bank_name);
+        newField.account_options = available.filter(val => val.name === field.bank_name)
         setField(newField)
-    }, [field.bank_name]);
+    }, [field.bank_name])
 
     useEffect(() => {
         const loadData = async () => {
@@ -109,9 +111,9 @@ const Cart = () => {
             let newBill = response.data.bills;
             console.log(newBill);
             setBills(newBill);
-        };
+        }
         loadData();
-    }, []);
+    }, [])
 
     const createAccountOption = () => {
         let availableBankName = [];
@@ -119,19 +121,22 @@ const Cart = () => {
             if (!availableBankName.find(val => val === item.name)) availableBankName.push(item.name)
         }
         return availableBankName;
-    };
+    }
 
     const postData = async submit_data => await axios.post(`${BILL}`, submit_data);
 
     const handleSubmit = event => {
         event.preventDefault();
-        let newField = {...field};
+        let newField = {...field}
         if (field.bank_name === '' || field.bank_name === "Choose..." ||
             field.bank_number === '' || field.bank_number === "Choose..."){
             newField.errors.bank = 'This field is required';
         }
-        else if (field.address === '')
+        if (field.address === '')
             newField.errors.address = 'This field is required';
+        if (newField.errors.address !== '' || newField.errors.bank !== '') {
+            setField(newField);
+        }
         else {
             const user = JSON.parse(localStorage.getItem(CURRENT_USER));
             const chosenAccount = field.account_options.find(value => value.bank_number === field.bank_number);
@@ -146,28 +151,24 @@ const Cart = () => {
                     returnObj.buyAmount = val.buyAmount;
                     return returnObj;
                 })
-            };
-            setField(newField);
-            postData(submitData);
+            }
             localStorage.setItem(CART, JSON.stringify([]));
             window.location.reload();
+            postData(submitData);
         }
-        setField(newField);
-    };
+    }
 
     const handleChange = event => {
-        setField({
-            ...field,
+        setField({...field,
             errors: {
                 bank: '',
                 address: ''
             },
-            [event.target.id]: event.target.value
-        });
-    };
+            [event.target.id]: event.target.value});
+    }
 
     if (!localStorage.getItem(IS_REGISTERED) || localStorage.getItem(IS_REGISTERED) === "false")
-        return <Redirect to={'/account'}/>;
+        return <Redirect to={'/account'}/>
 
     return (
         <div className={"buy"}>

@@ -1,0 +1,25 @@
+.front-page {
+  text-align: center;
+  position: relative;
+  padding-top: 100px;
+}
+
+@media all and (min-width: 480px) {
+  .staff-form {
+    padding: 60px 0;
+  }
+
+  .form-group {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+}
+
+.submit-button {
+  display: flex;
+  justify-content: center;
+}
+
+.error {
+  color: red;
+}

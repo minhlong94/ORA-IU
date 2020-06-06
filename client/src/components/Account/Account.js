@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, CardColumns, Col, Form, Row} from "react-bootstrap";
+import {Button, Card, CardColumns, Col, Form} from "react-bootstrap";
 import axios from "axios";
 import "./Account.css";
 import {BANK} from "../../api_config";
